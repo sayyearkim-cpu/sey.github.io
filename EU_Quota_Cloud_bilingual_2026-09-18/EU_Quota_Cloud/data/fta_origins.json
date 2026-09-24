@@ -1,0 +1,92 @@
+{
+  "099500": {
+    "quota_type": "FTA Quota \u2013 CSQ",
+    "origins": [
+      "India",
+      "Korea, Republic of (South Korea)",
+      "T\u00fcrkiye",
+      "Ukraine",
+      "United Kingdom"
+    ]
+  },
+  "099502": {
+    "quota_type": "FTA Quota \u2013 CSQ",
+    "origins": [
+      "India",
+      "Korea, Republic of (South Korea)",
+      "T\u00fcrkiye",
+      "Ukraine",
+      "United Kingdom"
+    ]
+  },
+  "099504": {
+    "quota_type": "FTA Quota \u2013 CSQ",
+    "origins": [
+      "Korea, Republic of (South Korea)"
+    ]
+  },
+  "099505": {
+    "quota_type": "FTA Quota \u2013 CSQ",
+    "origins": [
+      "India",
+      "Korea, Republic of (South Korea)",
+      "T\u00fcrkiye"
+    ]
+  },
+  "099506": {
+    "quota_type": "FTA Quota \u2013 CSQ",
+    "origins": [
+      "India",
+      "Korea, Republic of (South Korea)",
+      "T\u00fcrkiye",
+      "United Kingdom"
+    ]
+  },
+  "099507": {
+    "quota_type": "FTA Quota \u2013 CSQ",
+    "origins": [
+      "India",
+      "Korea, Republic of (South Korea)",
+      "T\u00fcrkiye",
+      "United Kingdom"
+    ]
+  },
+  "099508": {
+    "quota_type": "FTA Quota \u2013 CSQ",
+    "origins": [
+      "India",
+      "Korea, Republic of (South Korea)",
+      "T\u00fcrkiye",
+      "United Kingdom"
+    ]
+  },
+  "099509": {
+    "quota_type": "FTA Quota \u2013 CSQ",
+    "origins": [
+      "India",
+      "Indonesia",
+      "Korea, Republic of (South Korea)",
+      "North Macedonia",
+      "United Kingdom"
+    ]
+  },
+  "099511": {
+    "quota_type": "FTA Quota \u2013 CSQ",
+    "origins": [
+      "India",
+      "Korea, Republic of (South Korea)",
+      "South Africa",
+      "T\u00fcrkiye"
+    ]
+  },
+  "099517": {
+    "quota_type": "FTA Quota \u2013 CSQ",
+    "origins": [
+      "Egypt",
+      "Switzerland",
+      "T\u00fcrkiye",
+      "Ukraine",
+      "United Kingdom"
+    ]
+  }
+}

@@ -1,0 +1,507 @@
+{
+  "099801": {
+    "category": "1A",
+    "item_name": "열연강판",
+    "origin_label": "Türkiye"
+  },
+  "099802": {
+    "category": "1A",
+    "item_name": "열연강판",
+    "origin_label": "Japan"
+  },
+  "099803": {
+    "category": "1A",
+    "item_name": "열연강판",
+    "origin_label": "India"
+  },
+  "099804": {
+    "category": "1A",
+    "item_name": "열연강판",
+    "origin_label": "Taiwan"
+  },
+  "099806": {
+    "category": "1A",
+    "item_name": "열연강판",
+    "origin_label": "Korea, Republic of (South Korea)"
+  },
+  "099807": {
+    "category": "1A",
+    "item_name": "열연강판",
+    "origin_label": "Viet Nam"
+  },
+  "099808": {
+    "category": "1A",
+    "item_name": "열연강판",
+    "origin_label": "Egypt"
+  },
+  "099809": {
+    "category": "1A",
+    "item_name": "열연강판",
+    "origin_label": "Serbia"
+  },
+  "099500": {
+    "category": "1A",
+    "item_name": "열연강판",
+    "origin_label": "FTA Quota – CSQ"
+  },
+  "099701": {
+    "category": "1A",
+    "item_name": "열연강판",
+    "origin_label": "Brazil"
+  },
+  "099705": {
+    "category": "1A",
+    "item_name": "열연강판",
+    "origin_label": "United Kingdom"
+  },
+  "099702": {
+    "category": "1A",
+    "item_name": "열연강판",
+    "origin_label": "Indonesia"
+  },
+  "099704": {
+    "category": "1A",
+    "item_name": "열연강판",
+    "origin_label": "Switzerland"
+  },
+  "099600": {
+    "category": "1A",
+    "item_name": "열연강판",
+    "origin_label": "Other countries"
+  },
+  "099700": {
+    "category": "1A",
+    "item_name": "열연강판",
+    "origin_label": "FTA Quota – Other countries"
+  },
+  "099817": {
+    "category": "2",
+    "item_name": "냉연",
+    "origin_label": "Taiwan"
+  },
+  "099818": {
+    "category": "2",
+    "item_name": "냉연",
+    "origin_label": "India"
+  },
+  "099819": {
+    "category": "2",
+    "item_name": "냉연",
+    "origin_label": "Korea, Republic of (South Korea)"
+  },
+  "099820": {
+    "category": "2",
+    "item_name": "냉연",
+    "origin_label": "Türkiye"
+  },
+  "099821": {
+    "category": "2",
+    "item_name": "냉연",
+    "origin_label": "United Kingdom"
+  },
+  "099822": {
+    "category": "2",
+    "item_name": "냉연",
+    "origin_label": "Japan"
+  },
+  "099502": {
+    "category": "2",
+    "item_name": "냉연",
+    "origin_label": "FTA Quota – CSQ"
+  },
+  "099602": {
+    "category": "2",
+    "item_name": "냉연",
+    "origin_label": "Other countries"
+  },
+  "099707": {
+    "category": "2",
+    "item_name": "냉연",
+    "origin_label": "FTA Quota – Other countries"
+  },
+  "099709": {
+    "category": "2",
+    "item_name": "냉연",
+    "origin_label": "Egypt"
+  },
+  "099710": {
+    "category": "2",
+    "item_name": "냉연",
+    "origin_label": "Switzerland"
+  },
+  "099708": {
+    "category": "2",
+    "item_name": "냉연",
+    "origin_label": "Brazil"
+  },
+  "099828": {
+    "category": "3B",
+    "item_name": "전강",
+    "origin_label": "China"
+  },
+  "099829": {
+    "category": "3B",
+    "item_name": "전강",
+    "origin_label": "Taiwan"
+  },
+  "099830": {
+    "category": "3B",
+    "item_name": "전강",
+    "origin_label": "Korea, Republic of (South Korea)"
+  },
+  "099831": {
+    "category": "3B",
+    "item_name": "전강",
+    "origin_label": "Viet Nam"
+  },
+  "099504": {
+    "category": "3B",
+    "item_name": "전강",
+    "origin_label": "FTA Quota – CSQ"
+  },
+  "099604": {
+    "category": "3B",
+    "item_name": "전강",
+    "origin_label": "Other countries"
+  },
+  "099712": {
+    "category": "3B",
+    "item_name": "전강",
+    "origin_label": "FTA Quota – Other countries"
+  },
+  "099713": {
+    "category": "3B",
+    "item_name": "전강",
+    "origin_label": "Japan"
+  },
+  "099832": {
+    "category": "4A",
+    "item_name": "도금A",
+    "origin_label": "Viet Nam"
+  },
+  "099833": {
+    "category": "4A",
+    "item_name": "도금A",
+    "origin_label": "Taiwan"
+  },
+  "099834": {
+    "category": "4A",
+    "item_name": "도금A",
+    "origin_label": "Türkiye"
+  },
+  "099835": {
+    "category": "4A",
+    "item_name": "도금A",
+    "origin_label": "India"
+  },
+  "099836": {
+    "category": "4A",
+    "item_name": "도금A",
+    "origin_label": "Korea, Republic of (South Korea)"
+  },
+  "099505": {
+    "category": "4A",
+    "item_name": "도금A",
+    "origin_label": "FTA Quota – CSQ"
+  },
+  "099605": {
+    "category": "4A",
+    "item_name": "도금A",
+    "origin_label": "Other countries"
+  },
+  "099714": {
+    "category": "4A",
+    "item_name": "도금A",
+    "origin_label": "FTA Quota – Other countries"
+  },
+  "099718": {
+    "category": "4A",
+    "item_name": "도금A",
+    "origin_label": "United Kingdom"
+  },
+  "099716": {
+    "category": "4A",
+    "item_name": "도금A",
+    "origin_label": "Japan"
+  },
+  "099715": {
+    "category": "4A",
+    "item_name": "도금A",
+    "origin_label": "Egypt"
+  },
+  "099837": {
+    "category": "4B",
+    "item_name": "도금B",
+    "origin_label": "Korea, Republic of (South Korea)"
+  },
+  "099838": {
+    "category": "4B",
+    "item_name": "도금B",
+    "origin_label": "China"
+  },
+  "099839": {
+    "category": "4B",
+    "item_name": "도금B",
+    "origin_label": "United Kingdom"
+  },
+  "099840": {
+    "category": "4B",
+    "item_name": "도금B",
+    "origin_label": "Türkiye"
+  },
+  "099841": {
+    "category": "4B",
+    "item_name": "도금B",
+    "origin_label": "India"
+  },
+  "099506": {
+    "category": "4B",
+    "item_name": "도금B",
+    "origin_label": "FTA Quota – CSQ"
+  },
+  "099606": {
+    "category": "4B",
+    "item_name": "도금B",
+    "origin_label": "Other countries"
+  },
+  "099719": {
+    "category": "4B",
+    "item_name": "도금B",
+    "origin_label": "FTA Quota – Other countries"
+  },
+  "099842": {
+    "category": "5",
+    "item_name": "칼라",
+    "origin_label": "India"
+  },
+  "099843": {
+    "category": "5",
+    "item_name": "칼라",
+    "origin_label": "Korea, Republic of (South Korea)"
+  },
+  "099844": {
+    "category": "5",
+    "item_name": "칼라",
+    "origin_label": "Viet Nam"
+  },
+  "099845": {
+    "category": "5",
+    "item_name": "칼라",
+    "origin_label": "Türkiye"
+  },
+  "099846": {
+    "category": "5",
+    "item_name": "칼라",
+    "origin_label": "Taiwan"
+  },
+  "099847": {
+    "category": "5",
+    "item_name": "칼라",
+    "origin_label": "United Kingdom"
+  },
+  "099507": {
+    "category": "5",
+    "item_name": "칼라",
+    "origin_label": "FTA Quota – CSQ"
+  },
+  "099607": {
+    "category": "5",
+    "item_name": "칼라",
+    "origin_label": "Other countries"
+  },
+  "099722": {
+    "category": "5",
+    "item_name": "칼라",
+    "origin_label": "FTA Quota – Other countries"
+  },
+  "099848": {
+    "category": "6",
+    "item_name": "ETP",
+    "origin_label": "China"
+  },
+  "099849": {
+    "category": "6",
+    "item_name": "ETP",
+    "origin_label": "Serbia"
+  },
+  "099850": {
+    "category": "6",
+    "item_name": "ETP",
+    "origin_label": "United Kingdom"
+  },
+  "099851": {
+    "category": "6",
+    "item_name": "ETP",
+    "origin_label": "Türkiye"
+  },
+  "099852": {
+    "category": "6",
+    "item_name": "ETP",
+    "origin_label": "Korea, Republic of (South Korea)"
+  },
+  "099853": {
+    "category": "6",
+    "item_name": "ETP",
+    "origin_label": "India"
+  },
+  "099508": {
+    "category": "6",
+    "item_name": "ETP",
+    "origin_label": "FTA Quota – CSQ"
+  },
+  "099608": {
+    "category": "6",
+    "item_name": "ETP",
+    "origin_label": "Other countries"
+  },
+  "099724": {
+    "category": "6",
+    "item_name": "ETP",
+    "origin_label": "FTA Quota – Other countries"
+  },
+  "099725": {
+    "category": "6",
+    "item_name": "ETP",
+    "origin_label": "Japan"
+  },
+  "099854": {
+    "category": "7",
+    "item_name": "후판",
+    "origin_label": "Korea, Republic of (South Korea)"
+  },
+  "099855": {
+    "category": "7",
+    "item_name": "후판",
+    "origin_label": "Indonesia"
+  },
+  "099856": {
+    "category": "7",
+    "item_name": "후판",
+    "origin_label": "India"
+  },
+  "099857": {
+    "category": "7",
+    "item_name": "후판",
+    "origin_label": "Japan"
+  },
+  "099509": {
+    "category": "7",
+    "item_name": "후판",
+    "origin_label": "FTA Quota – CSQ"
+  },
+  "099609": {
+    "category": "7",
+    "item_name": "후판",
+    "origin_label": "Other countries"
+  },
+  "099727": {
+    "category": "7",
+    "item_name": "후판",
+    "origin_label": "FTA Quota – Other countries"
+  },
+  "099728": {
+    "category": "7",
+    "item_name": "후판",
+    "origin_label": "Türkiye"
+  },
+  "099867": {
+    "category": "9",
+    "item_name": "STS CR",
+    "origin_label": "Taiwan"
+  },
+  "099868": {
+    "category": "9",
+    "item_name": "STS CR",
+    "origin_label": "China"
+  },
+  "099869": {
+    "category": "9",
+    "item_name": "STS CR",
+    "origin_label": "Korea, Republic of (South Korea)"
+  },
+  "099870": {
+    "category": "9",
+    "item_name": "STS CR",
+    "origin_label": "Türkiye"
+  },
+  "099872": {
+    "category": "9",
+    "item_name": "STS CR",
+    "origin_label": "Viet Nam"
+  },
+  "099873": {
+    "category": "9",
+    "item_name": "STS CR",
+    "origin_label": "India"
+  },
+  "099511": {
+    "category": "9",
+    "item_name": "STS CR",
+    "origin_label": "FTA Quota – CSQ"
+  },
+  "099611": {
+    "category": "9",
+    "item_name": "STS CR",
+    "origin_label": "Other countries"
+  },
+  "099730": {
+    "category": "9",
+    "item_name": "STS CR",
+    "origin_label": "FTA Quota – Other countries"
+  },
+  "099900": {
+    "category": "16",
+    "item_name": "선재",
+    "origin_label": "Türkiye"
+  },
+  "099901": {
+    "category": "16",
+    "item_name": "선재",
+    "origin_label": "Malaysia"
+  },
+  "099902": {
+    "category": "16",
+    "item_name": "선재",
+    "origin_label": "United Kingdom"
+  },
+  "099904": {
+    "category": "16",
+    "item_name": "선재",
+    "origin_label": "Switzerland"
+  },
+  "099905": {
+    "category": "16",
+    "item_name": "선재",
+    "origin_label": "Viet Nam"
+  },
+  "099907": {
+    "category": "16",
+    "item_name": "선재",
+    "origin_label": "Egypt"
+  },
+  "099517": {
+    "category": "16",
+    "item_name": "선재",
+    "origin_label": "FTA Quota – CSQ"
+  },
+  "099617": {
+    "category": "16",
+    "item_name": "선재",
+    "origin_label": "Other countries"
+  },
+  "099739": {
+    "category": "16",
+    "item_name": "선재",
+    "origin_label": "FTA Quota – Other countries"
+  },
+  "099740": {
+    "category": "16",
+    "item_name": "선재",
+    "origin_label": "Korea, Republic of (South Korea)"
+  },
+  "099741": {
+    "category": "16",
+    "item_name": "선재",
+    "origin_label": "Japan"
+  }
+}

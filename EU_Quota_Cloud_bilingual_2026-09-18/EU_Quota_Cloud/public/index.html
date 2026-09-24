@@ -1,0 +1,2629 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EU 철강 세이프가드 쿼터 모니터</title>
+<link rel="apple-touch-icon-precomposed" href="https://www.gsgcorp.com/common/img/favicon_GS_64x64.png">
+<link rel="icon" href="https://www.gsgcorp.com/common/img/favicon_GS_64x64.png">
+<link rel="icon" href="https://www.gsgcorp.com/common/img/favicon_GS_16x16.png" sizes="16x16">
+<link rel="icon" href="https://www.gsgcorp.com/common/img/favicon_GS_32x32.png" sizes="32x32">
+<link rel="icon" href="https://www.gsgcorp.com/common/img/favicon_GS_64x64.png" sizes="64x64">
+<link rel="shortcut icon" href="https://www.gsgcorp.com/common/img/favicon_GS_16x16.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="lib/exceljs.min.js"></script>
+<style>
+  :root[data-theme="dark"] {
+    --bg: #14161a;
+    --bg-raised: #1c1f24;
+    --panel: #20242a;
+    --border: #2d323a;
+    --border-soft: #262a31;
+    --text: #e7e9ec;
+    --text-dim: #9aa1ab;
+    --text-faint: #656b74;
+    --steel: #5b8db8;
+    --steel-dim: #3d5a72;
+    --alert: #e2523f;
+    --alert-bg: #3a1c18;
+    --alert-border: #7a2e22;
+    --warn: #d99a3d;
+    --warn-bg: #3a2e14;
+    --warn-border: #7a5a22;
+    --ok: #4a9d6e;
+    --tooltip-bg: #262b32;
+    --tooltip-border: #3a4048;
+    --shadow: rgba(0,0,0,0.4);
+    --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70; --series-4: #c98500;
+    --series-5: #d55181; --series-6: #008300; --series-7: #9085e9; --series-8: #e66767;
+    --series-other: #4a5058;
+  }
+  :root[data-theme="light"] {
+    --bg: #f2f4f7;
+    --bg-raised: #ffffff;
+    --panel: #ffffff;
+    --border: #d8dde4;
+    --border-soft: #e5e8ed;
+    --text: #161a1f;
+    --text-dim: #52606e;
+    --text-faint: #8592a0;
+    --steel: #215f8a;
+    --steel-dim: #c5d8ea;
+    --alert: #b83226;
+    --alert-bg: #fce9e7;
+    --alert-border: #efb3ac;
+    --warn: #9a5f08;
+    --warn-bg: #fdf0df;
+    --warn-border: #edcf96;
+    --ok: #1e6e3f;
+    --tooltip-bg: #ffffff;
+    --tooltip-border: #cdd2d8;
+    --shadow: rgba(20,28,38,0.11);
+    --series-1: #2a78d6; --series-2: #eb6834; --series-3: #1baf7a; --series-4: #eda100;
+    --series-5: #e87ba4; --series-6: #008300; --series-7: #4a3aa7; --series-8: #e34948;
+    --series-other: #c9ced6;
+  }
+  :root {
+    --mono: 'IBM Plex Mono', monospace;
+    --display: 'Oswald', sans-serif;
+    --body: 'IBM Plex Sans', 'IBM Plex Sans KR', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  button:focus-visible, input:focus-visible, select:focus-visible, th.sortable:focus-visible {
+    outline: 2px solid var(--steel); outline-offset: 2px;
+  }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    margin: 0;
+    padding: 24px 28px 60px;
+    -webkit-font-smoothing: antialiased;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 18px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .masthead-left { display: flex; flex-direction: column; gap: 8px; }
+  .title-row { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 27px;
+    letter-spacing: 1px;
+    margin: 0;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--steel);
+    text-transform: uppercase;
+    border: 1px solid var(--steel);
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+  .quarter-badge {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .quarter-badge b { color: var(--text); font-weight: 600; font-size: 13px; }
+
+  .masthead-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 11px;
+  }
+  .theme-toggle button {
+    border: none;
+    background: transparent;
+    padding: 5px 10px;
+    border-radius: 16px;
+    font-family: var(--mono);
+    font-size: 11px;
+    cursor: pointer;
+    color: var(--text-dim);
+  }
+  .theme-toggle button.active {
+    background: var(--steel);
+    color: white;
+  }
+  :root[data-theme="light"] .theme-toggle button.active { color: white; }
+
+  .updated-block {
+    text-align: right;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+  .updated-block b { color: var(--text); font-weight: 500; }
+  .eu-update-line { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border-soft); }
+  .freshness-warn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--warn);
+    background: var(--warn-bg);
+    border: 1px solid var(--warn-border);
+    padding: 3px 8px;
+    border-radius: 3px;
+    margin-top: 4px;
+  }
+
+  .overview-strip {
+    display: grid;
+    grid-template-columns: minmax(200px, 1fr) minmax(0, 2.4fr);
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: stretch;
+  }
+  .collection-health, .daily-change-panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    box-shadow: 0 1px 3px var(--shadow);
+  }
+  .collection-health {
+    padding: 14px 16px;
+    display: flex; flex-direction: column; justify-content: center; gap: 8px;
+  }
+  .health-line {
+    display: flex; align-items: center; gap: 9px;
+    font: 600 13px var(--mono); letter-spacing: 0.2px;
+  }
+  .health-dot {
+    width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
+    background: var(--ok);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 18%, transparent);
+  }
+  .collection-health.warning .health-dot { background: var(--warn); box-shadow: 0 0 0 3px color-mix(in srgb, var(--warn) 18%, transparent); }
+  .collection-health.error   .health-dot { background: var(--alert); box-shadow: 0 0 0 3px color-mix(in srgb, var(--alert) 18%, transparent); }
+  .health-meta { color: var(--text-dim); font: 11px var(--mono); line-height: 1.55; }
+  .failed-orders { color: var(--alert); overflow-wrap: anywhere; }
+  .daily-change-panel { padding: 12px 14px; }
+  .daily-change-heading {
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: 10px; margin-bottom: 10px;
+  }
+  .daily-change-heading b { font-size: 12px; letter-spacing: 0.2px; }
+  .daily-change-heading span { color: var(--text-faint); font: 10px var(--mono); }
+  .change-cards { display: grid; grid-template-columns: repeat(3, minmax(100px, 1fr)); gap: 8px; }
+  .change-card {
+    appearance: none; text-align: left; cursor: pointer;
+    background: var(--bg-raised); color: var(--text-dim);
+    border: 1px solid var(--border); border-radius: 5px;
+    padding: 10px 12px; font: 11px var(--body);
+    transition: border-color 0.12s, background 0.12s;
+  }
+  .change-card:hover { border-color: var(--steel); }
+  .change-card.active { border-color: var(--steel); background: color-mix(in srgb, var(--steel) 8%, var(--bg-raised)); }
+  .change-card b { display: block; margin-top: 4px; font: 700 20px var(--mono); letter-spacing: -0.5px; color: var(--text); }
+  .change-card.alert b { color: var(--alert); }
+  .change-card.warn  b { color: var(--warn); }
+
+  /* Category gauge strip */
+  .gauge-strip {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 14px 0 2px;
+    border-top: 1px solid var(--border-soft);
+  }
+  .gauge-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 13px 14px;
+    cursor: pointer;
+    transition: border-color 0.13s ease, box-shadow 0.13s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 1px 3px var(--shadow);
+  }
+  .gauge-card:hover { box-shadow: 0 2px 8px var(--shadow); }
+  .gauge-card:hover { border-color: var(--steel); }
+  .gauge-card.active { border-color: var(--steel); }
+  :root[data-theme="dark"]  .gauge-card.active { background: #1e2530; }
+  :root[data-theme="light"] .gauge-card.active { background: #eef5fb; }
+  .gauge-card.active::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: var(--steel);
+  }
+  .gauge-code {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-faint);
+    letter-spacing: 1px;
+  }
+  .gauge-name {
+    font-family: var(--display);
+    font-size: 15px;
+    font-weight: 500;
+    margin: 2px 0 8px;
+    color: var(--text);
+  }
+  .gauge-track {
+    height: 4px;
+    background: var(--border-soft);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  .gauge-fill { height: 100%; background: var(--steel); }
+  .gauge-fill.hot { background: var(--alert); }
+  .gauge-fill.warm { background: var(--warn); }
+  .gauge-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+  .gauge-meta .exhausted-count { color: var(--alert); }
+
+  /* Toolbar */
+  .toolbar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  input[type=text] {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-family: var(--mono);
+    width: 240px;
+    transition: border-color 0.12s;
+  }
+  input[type=text]:focus { outline: none; border-color: var(--steel); }
+  input[type=text]::placeholder { color: var(--text-faint); }
+  .history-control { display: flex; align-items: center; gap: 7px; font: 11px var(--mono); color: var(--text-dim); }
+  .history-control select {
+    background: var(--bg-raised); border: 1px solid var(--border); color: var(--text);
+    padding: 7px 28px 7px 10px; border-radius: 5px; font: 12px var(--mono); cursor: pointer;
+    transition: border-color 0.12s;
+  }
+  .history-control select:focus { outline: none; border-color: var(--steel); }
+  button.tool-btn {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 8px 13px;
+    border-radius: 5px;
+    font-size: 11.5px;
+    font-family: var(--mono);
+    letter-spacing: 0.4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: border-color 0.12s, color 0.12s, background 0.12s;
+  }
+  button.tool-btn:hover { border-color: var(--steel); color: var(--steel); }
+  button.tool-btn.active-btn { background: var(--steel); color: white; border-color: var(--steel); }
+  .quick-filter-group { display: flex; gap: 6px; flex-wrap: wrap; }
+  button.tool-btn.primary-btn {
+    background: var(--steel);
+    color: white;
+    border-color: var(--steel);
+  }
+  button.tool-btn.primary-btn:hover { opacity: 0.9; color: white; }
+  .export-dropdown { position: relative; }
+  .export-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    box-shadow: 0 6px 20px var(--shadow);
+    z-index: 50;
+    min-width: 185px;
+    overflow: hidden;
+  }
+  .export-menu.open { display: block; }
+  .export-menu button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    padding: 10px 14px;
+    font-family: var(--body);
+    font-size: 13px;
+    color: var(--text);
+    cursor: pointer;
+    text-transform: none;
+    letter-spacing: normal;
+  }
+  .export-menu button:hover { background: var(--border-soft); }
+  .status-line {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+  .status-line .n { color: var(--text); }
+  .status-line .exh { color: var(--alert); }
+
+  /* Table */
+  .table-wrap {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow-x: auto;
+    box-shadow: 0 1px 4px var(--shadow);
+  }
+  table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12.5px; min-width: 1160px; }
+  body.show-kg table { min-width: 1760px; }
+  .kg-col { display: none; }
+  body.show-kg .kg-col { display: table-cell; }
+  th, td {
+    padding: 9px 12px;
+    text-align: right;
+    border-bottom: 1px solid var(--border-soft);
+    white-space: nowrap;
+    font-family: var(--mono);
+  }
+  th:nth-child(-n+5), td:nth-child(-n+5) { text-align: left; font-family: var(--body); }
+  th {
+    background: var(--bg-raised);
+    color: var(--text-faint);
+    font-weight: 500;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    box-shadow: 0 1px 0 var(--border);
+  }
+  th.sortable { cursor: pointer; user-select: none; }
+  th.sortable:hover, th.sortable:focus { color: var(--steel); outline: none; }
+  .sort-indicator { display: inline-block; min-width: 10px; color: var(--steel); }
+  /* :not(.exhausted) keeps this from ever outranking the exhausted-row
+     background below on hover, regardless of selector-order changes. */
+  tbody tr:not(.exhausted):hover td { background: var(--border-soft); }
+  tr.exhausted td {
+    background: var(--alert-bg);
+    color: var(--alert);
+  }
+  tr.exhausted:hover td { filter: brightness(1.08); }
+  tr.exhausted td:first-child { border-left: 3px solid var(--alert); }
+  #quota-table th:nth-child(3), #quota-table td:nth-child(3) {
+    position: sticky; left: 0; z-index: 3; min-width: 150px; background: var(--panel);
+  }
+  #quota-table th:nth-child(4), #quota-table td:nth-child(4) {
+    position: sticky; left: 150px; z-index: 3; min-width: 205px;
+    background: var(--panel); box-shadow: 2px 0 0 var(--border-soft);
+  }
+  #quota-table th:nth-child(3), #quota-table th:nth-child(4) { z-index: 5; background: var(--bg-raised); }
+  #quota-table tr.exhausted td:nth-child(3), #quota-table tr.exhausted td:nth-child(4) { background: var(--alert-bg); }
+  #quota-table tbody tr:not(.exhausted):hover td:nth-child(3),
+  #quota-table tbody tr:not(.exhausted):hover td:nth-child(4) { background: var(--border-soft); }
+  tr.exhausted .exh-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.5px;
+    color: var(--alert);
+    border: 1px solid var(--alert-border);
+    padding: 1px 5px;
+    border-radius: 2px;
+    margin-left: 6px;
+  }
+  .rate-cell { display: flex; align-items: center; gap: 6px; justify-content: flex-end; }
+  .rate-bar {
+    width: 42px; height: 5px; background: var(--border-soft); border-radius: 2px; overflow: hidden; flex-shrink: 0;
+  }
+  .rate-fill { display: block; height: 100%; background: var(--steel); }
+  .negative-rate { color: var(--alert); font-weight: 600; }
+  .over-pending-badge { display: inline-block; margin-left: 6px; padding: 1px 5px; border-radius: 2px; color: var(--warn); border: 1px solid var(--warn-border); background: var(--warn-bg); font: 9px var(--mono); letter-spacing: .2px; vertical-align: middle; }
+  /* 공식 소진(is_exhausted) 아니지만 실제잔여·잔여율이 0 이하인 셀만 주황색 */
+  .pre-exhausted-num { color: var(--warn); font-weight: 600; }
+  .empty-state { padding: 60px 20px; text-align: center; color: var(--text-faint); font-family: var(--mono); font-size: 13px; }
+  .category-pill {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    padding: 1px 6px;
+    border-radius: 2px;
+    margin-right: 6px;
+  }
+  .fta-badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.3px;
+    color: var(--steel);
+    border: 1px solid var(--steel);
+    padding: 1px 5px;
+    border-radius: 2px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .origins-cell {
+    position: relative;
+    cursor: default;
+  }
+  .origins-cell.has-fta {
+    cursor: help;
+    border-bottom: 1px dashed var(--text-faint);
+    display: inline-block;
+  }
+  .origins-info-icon {
+    color: var(--steel);
+    font-size: 11px;
+    margin-left: 3px;
+  }
+
+  .order-history-link {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px dashed var(--steel);
+    color: var(--steel);
+    cursor: pointer;
+    font: inherit;
+    padding: 0 0 1px;
+  }
+  .order-history-link:hover,
+  .order-history-link:focus-visible {
+    color: var(--text);
+    border-bottom-style: solid;
+    outline: none;
+  }
+
+  /* Order-number history dialog */
+  .history-dialog {
+    width: min(1080px, calc(100vw - 32px));
+    max-height: calc(100vh - 32px);
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: var(--panel);
+    color: var(--text);
+    box-shadow: 0 18px 60px rgba(0,0,0,.45);
+    overflow: hidden;
+  }
+  .history-dialog::backdrop { background: rgba(5, 10, 15, .72); backdrop-filter: blur(2px); }
+  .history-dialog-shell { display: flex; flex-direction: column; max-height: calc(100vh - 32px); }
+  .history-dialog-header {
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 18px;
+    padding: 18px 20px 15px; border-bottom: 1px solid var(--border); background: var(--bg-raised);
+  }
+  .history-dialog-eyebrow { color: var(--steel); font: 10px var(--mono); letter-spacing: .8px; text-transform: uppercase; }
+  .history-dialog-title { margin: 5px 0 2px; font-size: 20px; line-height: 1.25; }
+  .history-dialog-subtitle { color: var(--text-dim); font-size: 12px; }
+  .history-dialog-close {
+    width: 34px; height: 34px; flex: 0 0 auto; border: 1px solid var(--border); border-radius: 4px;
+    background: transparent; color: var(--text); cursor: pointer; font-size: 20px; line-height: 1;
+  }
+  .history-dialog-close:hover, .history-dialog-close:focus-visible { border-color: var(--steel); color: var(--steel); outline: none; }
+  .history-dialog-body { padding: 18px 20px 20px; overflow: auto; }
+  .history-summary { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .history-summary-chip {
+    padding: 6px 9px; border: 1px solid var(--border); border-radius: 3px;
+    background: var(--bg-raised); color: var(--text-dim); font: 11px var(--mono);
+  }
+  .history-summary-chip b { color: var(--text); font-weight: 600; }
+  .history-chart-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .history-chart-title { font: 600 12px var(--body); color: var(--text); }
+  .history-metric-toggle { display: flex; border: 1px solid var(--border); border-radius: 3px; overflow: hidden; }
+  .history-metric-toggle button {
+    border: 0; border-right: 1px solid var(--border); padding: 6px 10px;
+    background: transparent; color: var(--text-dim); cursor: pointer; font: 10px var(--mono);
+  }
+  .history-metric-toggle button:last-child { border-right: 0; }
+  .history-metric-toggle button.active { background: var(--steel); color: #fff; }
+  .history-chart {
+    min-height: 285px; border: 1px solid var(--border); border-radius: 4px;
+    background: var(--bg); overflow: hidden;
+  }
+  .history-chart svg { display: block; width: 100%; height: auto; min-height: 285px; }
+  .history-chart-empty { padding: 110px 20px; color: var(--text-faint); text-align: center; font: 12px var(--mono); }
+  .history-table-heading { display: flex; justify-content: space-between; gap: 10px; margin: 18px 0 8px; }
+  .history-table-heading b { font-size: 12px; }
+  .history-table-heading span { color: var(--text-faint); font: 10px var(--mono); }
+  .history-table-wrap { max-height: 260px; overflow: auto; border: 1px solid var(--border); border-radius: 4px; }
+  .history-detail-table { min-width: 910px; font-size: 11.5px; }
+  .history-detail-table th, .history-detail-table td { padding: 8px 9px; }
+  .history-detail-table th:nth-child(-n+5), .history-detail-table td:nth-child(-n+5) { text-align: right; font-family: var(--mono); }
+  .history-detail-table th:first-child, .history-detail-table td:first-child { text-align: left; }
+  .history-detail-table tr.selected-snapshot td { background: color-mix(in srgb, var(--steel) 12%, transparent); }
+
+  @media (max-width: 680px) {
+    .history-dialog { width: calc(100vw - 16px); max-height: calc(100vh - 16px); }
+    .history-dialog-shell { max-height: calc(100vh - 16px); }
+    .history-dialog-header, .history-dialog-body { padding-left: 13px; padding-right: 13px; }
+    .history-chart-toolbar { align-items: flex-start; flex-direction: column; }
+    .history-chart { min-height: 235px; }
+    .history-chart svg { min-height: 235px; }
+  }
+
+  /* Tooltip */
+  .fta-tooltip {
+    position: fixed;
+    background: var(--tooltip-bg);
+    border: 1px solid var(--tooltip-border);
+    border-radius: 5px;
+    padding: 10px 12px;
+    font-family: var(--body);
+    font-size: 12px;
+    color: var(--text);
+    box-shadow: 0 4px 16px var(--shadow);
+    z-index: 100;
+    max-width: 260px;
+    pointer-events: none;
+    display: none;
+  }
+  .fta-tooltip.visible { display: block; }
+  .fta-tooltip .tt-type {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--steel);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+  .fta-tooltip .tt-order {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-faint);
+    margin-bottom: 8px;
+  }
+  .fta-tooltip .tt-count {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+  }
+  .fta-tooltip ul {
+    margin: 0;
+    padding-left: 16px;
+    line-height: 1.6;
+  }
+
+  .loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    transition: opacity 0.3s ease;
+  }
+  .loading-overlay.hidden { opacity: 0; pointer-events: none; }
+  .loading-spinner {
+    width: 36px; height: 36px;
+    border: 3px solid var(--border);
+    border-top-color: var(--steel);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  .loading-text {
+    font: 12px var(--mono);
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .history-mode-badge {
+    display: none;
+    align-items: center;
+    gap: 5px;
+    font: 600 11px var(--mono);
+    color: var(--warn);
+    background: var(--warn-bg);
+    border: 1px solid var(--warn-border);
+    padding: 3px 9px;
+    border-radius: 3px;
+    letter-spacing: 0.3px;
+  }
+  .history-mode-badge.visible { display: inline-flex; }
+  .language-toggle {
+    display: inline-flex;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--bg-raised);
+  }
+  .language-toggle button {
+    border: 0;
+    border-right: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    padding: 6px 10px;
+    cursor: pointer;
+    font: 600 10px var(--mono);
+  }
+  .language-toggle button:last-child { border-right: 0; }
+  .language-toggle button.active { background: var(--steel); color: #fff; }
+  footer {
+    margin-top: 18px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    line-height: 1.7;
+  }
+  @media (max-width: 1100px) {
+    body { padding-left: 18px; padding-right: 18px; }
+    .overview-strip { grid-template-columns: 1fr; }
+    .gauge-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (max-width: 680px) {
+    body { padding: 16px 10px 40px; }
+    .masthead-right { align-items: flex-start; }
+    .updated-block { text-align: left; }
+    .change-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .gauge-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .status-line { width: 100%; margin-left: 0; }
+    #quota-table th:nth-child(3), #quota-table td:nth-child(3) { min-width: 126px; }
+    #quota-table th:nth-child(4), #quota-table td:nth-child(4) { left: 126px; min-width: 180px; }
+  }
+  [hidden] { display: none !important; }
+  .history-chart { position: relative; }
+  .chart-tip {
+    position: absolute; top: 8px; z-index: 3; pointer-events: none; min-width: 150px;
+    background: var(--tooltip-bg); border: 1px solid var(--tooltip-border); border-radius: 4px;
+    box-shadow: 0 4px 12px var(--shadow); padding: 7px 9px; font: 11px var(--mono); color: var(--text);
+  }
+  .chart-tip div { display: flex; align-items: center; gap: 6px; white-space: nowrap; margin-top: 3px; }
+  .chart-tip div span:last-child { color: var(--text-dim); }
+  .tip-key { display: inline-block; width: 14px; border-top: 2px solid; }
+  .cmp-controls input[type=date] {
+    background: var(--bg-raised); border: 1px solid var(--border); color: var(--text);
+    padding: 6px 8px; border-radius: 5px; font: 12px var(--mono); color-scheme: inherit;
+  }
+  :root[data-theme="dark"] .cmp-controls input[type=date] { color-scheme: dark; }
+  .cmp-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .cmp-status {
+    display: flex; align-items: center; gap: 8px; min-height: 34px; margin: -2px 0 10px;
+    padding: 7px 10px; border: 1px solid var(--border); border-radius: 4px;
+    background: var(--bg-raised); color: var(--text-dim); font: 11px var(--mono);
+  }
+  .cmp-status.warning { color: var(--warn); border-color: var(--warn-border); background: var(--warn-bg); }
+  .cmp-status.error { color: var(--alert); }
+  .cmp-status button { margin-left: auto; }
+  .cmp-range-error { color: var(--warn); font: 10px var(--mono); }
+  .cmp-chip {
+    display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 14px; cursor: pointer;
+    border: 1px solid var(--border); background: var(--bg-raised); color: var(--text-dim); font: 11px var(--mono);
+  }
+  .cmp-chip.active { color: var(--text); border-color: var(--text-faint); }
+  .cmp-chip:disabled { opacity: .45; cursor: not-allowed; }
+  .cmp-swatch { width: 10px; height: 10px; border-radius: 50%; border: 1px solid var(--border); }
+  .cmp-grid { display: grid; grid-template-columns: minmax(0, 2.2fr) minmax(260px, 1fr); gap: 12px; margin-bottom: 4px; }
+  .cmp-panel {
+    min-width: 0; padding: 12px 14px; background: var(--panel); border: 1px solid var(--border);
+    border-radius: 6px; box-shadow: 0 1px 3px var(--shadow);
+  }
+  .cmp-panel-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+  .cmp-note { font: 10px var(--mono); color: var(--text-faint); }
+  .cmp-panel .history-chart, .cmp-panel .history-chart svg { min-height: 0; }
+  .cmp-donut svg { display: block; width: 100%; max-width: 210px; margin: 4px auto 10px; }
+  .cmp-donut-legend { list-style: none; margin: 0; padding: 0; font: 11px var(--mono); color: var(--text-dim); }
+  .cmp-donut-legend li { display: flex; align-items: center; gap: 6px; padding: 4px 0; border-bottom: 1px solid var(--border-soft); }
+  .cmp-donut-legend li b { margin-left: auto; color: var(--text); font-weight: 500; }
+  #cmp-table { min-width: 860px; }
+  #cmp-table th, #cmp-table td { text-align: right; font-family: var(--mono); }
+  #cmp-table th:first-child, #cmp-table td:first-child { text-align: left; font-family: var(--body); }
+  @media (max-width: 900px) { .cmp-grid { grid-template-columns: 1fr; } }
+  ::-webkit-scrollbar { height: 8px; width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loading-overlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text" data-i18n="loadingTaric">TARIC 쿼터 데이터를 불러오는 중입니다...</div>
+</div>
+<div class="masthead">
+  <div class="masthead-left">
+    <div class="title-row">
+      <h1 data-i18n="title">EU 철강 세이프가드 쿼터 모니터</h1>
+      <span class="eyebrow">Safeguard TRQ</span>
+    </div>
+    <div class="quarter-badge"><span data-i18n="currentQuarter">현재 조회 분기</span> <b id="quarter-label">-</b> <span id="quarter-range"></span></div>
+    <nav class="language-toggle" aria-label="View" style="align-self:flex-start">
+      <button id="tab-status" type="button" class="active" onclick="location.hash=''" data-i18n="tabStatus">현황</button>
+      <button id="tab-compare" type="button" onclick="location.hash='compare'" data-i18n="tabCompare">비교·예측</button>
+    </nav>
+  </div>
+  <div class="masthead-right">
+    <div class="language-toggle" id="language-toggle" aria-label="Language">
+      <button id="lang-ko-btn" type="button" onclick="setLanguage('ko')">한국어</button>
+      <button id="lang-en-btn" type="button" onclick="setLanguage('en')">English</button>
+    </div>
+    <div class="theme-toggle" id="theme-toggle">
+      <button id="theme-dark-btn" onclick="setTheme('dark')">🌙 Dark</button>
+      <button id="theme-light-btn" onclick="setTheme('light')">☀ Light</button>
+    </div>
+    <div class="updated-block">
+      <span data-i18n="dataCollected">데이터 수집 시각 (Data collected)</span><br><b id="last-updated">-</b>
+      <div id="freshness-warning" style="display:none;"></div>
+      <div class="eu-update-line"><span data-i18n="euSiteUpdate">EU 사이트 최종 업데이트 (EU site update)</span><br><b id="eu-site-updated">-</b></div>
+    </div>
+  </div>
+</div>
+
+<div id="status-view">
+<section class="overview-strip" aria-label="수집 상태와 일일 변동 요약" data-i18n-aria-label="overviewAria">
+  <div class="collection-health" id="collection-health">
+    <div class="health-line"><span class="health-dot" aria-hidden="true"></span><span id="health-title" data-i18n="checkingStatus">수집 상태 확인 중</span></div>
+    <div class="health-meta" id="health-meta">-</div>
+  </div>
+  <div class="daily-change-panel">
+    <div class="daily-change-heading"><b data-i18n="dailySummary">기준일 변동 요약</b><span id="comparison-period" data-i18n="comparePrevious">직전 기록과 비교</span></div>
+    <div class="change-cards" id="change-cards">
+      <button class="change-card warn" type="button" data-summary-filter="rate-jump"><span data-i18n="rateJump">소진율 +5%p 이상</span><b id="rate-jump-count">-</b></button>
+      <button class="change-card warn" type="button" data-summary-filter="pending-jump"><span data-i18n="pendingJump">대기할당 급증</span><b id="pending-jump-count">-</b></button>
+      <button class="change-card alert" type="button" data-summary-filter="low-remaining"><span data-i18n="lowRemaining">실제잔여율 5% 이하</span><b id="low-remaining-count">-</b></button>
+    </div>
+  </div>
+</section>
+
+<div class="gauge-strip" id="gauge-strip"></div>
+
+<div class="toolbar">
+  <label class="history-control"><span data-i18n="snapshotDate">조회 기준일</span>
+    <select id="history-date" onchange="selectHistoryDate(this.value)" aria-label="과거 현황 조회 기준일" data-i18n-aria-label="historyDateAria"></select>
+  </label>
+  <span class="history-mode-badge" id="history-mode-badge">📅 <span data-i18n="viewingHistory">과거 데이터 조회 중</span></span>
+  <input type="text" id="search" placeholder="주문번호 / 원산지 (한글 가능)..." data-i18n-placeholder="searchPlaceholder">
+  <button class="tool-btn" onclick="clearFilters()" data-i18n="viewAll">전체 보기</button>
+  <button class="tool-btn" id="kg-toggle" type="button" onclick="toggleKgColumns()">kg 표시</button>
+  <div class="quick-filter-group" aria-label="빠른 필터" data-i18n-aria-label="quickFilterAria">
+    <button class="tool-btn" id="filter-low-remaining" type="button" onclick="toggleQuickFilter('low-remaining')" data-i18n="quickLowRemaining">잔여율 5% 이하</button>
+  </div>
+  <div class="export-dropdown">
+    <button class="tool-btn primary-btn" onclick="toggleExportMenu()"><span data-i18n="excelDownload">Excel 다운로드</span> ▾</button>
+    <div class="export-menu" id="export-menu">
+      <button onclick="exportToExcel('visible')" data-i18n="visibleResults">현재 화면 / 필터 결과</button>
+      <button onclick="exportToExcel('all')" data-i18n="allData">전체 데이터</button>
+    </div>
+  </div>
+  <span class="status-line" id="status-line"></span>
+</div>
+
+<div id="active-filter-bar" style="display:none;margin-bottom:8px;font:12px var(--mono);color:var(--text-dim);align-items:center;gap:8px;flex-wrap:wrap;">
+  <span style="color:var(--text-faint);" data-i18n="filtersApplied">필터 적용 중:</span>
+  <span id="active-filter-tags"></span>
+  <button onclick="clearFilters()" style="border:none;background:none;color:var(--steel);cursor:pointer;font:11px var(--mono);padding:0;text-decoration:underline;" data-i18n="viewAll">전체 보기</button>
+</div>
+<div class="table-wrap">
+<table id="quota-table">
+  <thead>
+    <tr>
+      <th>P/N</th>
+      <th>Item</th>
+      <th>Order number</th>
+      <th>Origins</th>
+      <th class="col-qty kg-col"><span data-i18n="quarterlyQuota">분기 쿼터</span> (kg)</th>
+      <th class="col-qty"><span data-i18n="quarterlyQuota">분기 쿼터</span> (t)</th>
+      <th class="col-qty kg-col"><span data-i18n="transferredQuota">이월량</span> (kg)</th>
+      <th class="col-qty"><span data-i18n="transferredQuota">이월량</span> (t)</th>
+      <th class="col-qty kg-col"><span data-i18n="awaitingAllocation">대기할당</span> (kg)</th>
+      <th class="col-qty"><span data-i18n="awaitingAllocation">대기할당</span> (t)</th>
+      <th class="col-qty kg-col"><span data-i18n="remainingQuota">잔여 쿼터</span> (kg)</th>
+      <th class="col-qty"><span data-i18n="remainingQuota">잔여 쿼터</span> (t)</th>
+      <th class="col-qty kg-col"><span data-i18n="actualRemainingQuota">실제잔여 쿼터</span> (kg)</th>
+      <th class="col-qty"><span data-i18n="actualRemainingQuota">실제잔여 쿼터</span> (t)</th>
+      <th class="sortable" role="button" tabindex="0" onclick="toggleSort('remaining_rate')" onkeydown="handleSortKey(event, () => toggleSort('remaining_rate'))"><span data-i18n="remainingRate">잔여율</span> <span class="sort-indicator" id="sort-remaining_rate"></span></th>
+      <th class="sortable" role="button" tabindex="0" onclick="toggleSort('consumption_rate')" onkeydown="handleSortKey(event, () => toggleSort('consumption_rate'))"><span data-i18n="consumptionRate">소진율</span> <span class="sort-indicator" id="sort-consumption_rate"></span></th>
+      <th class="sortable" role="button" tabindex="0" onclick="toggleSort('exhaustion_date')" onkeydown="handleSortKey(event, () => toggleSort('exhaustion_date'))"><span data-i18n="exhaustionDate">소진 날짜</span> <span class="sort-indicator" id="sort-exhaustion_date"></span></th>
+    </tr>
+  </thead>
+  <tbody id="table-body"></tbody>
+</table>
+</div>
+</div>
+
+<section id="compare-view" hidden>
+  <div class="toolbar cmp-controls">
+    <label class="history-control"><span data-i18n="rangeFrom">시작일</span><input type="date" id="cmp-from" onchange="renderCompare()" aria-describedby="cmp-range-error"></label>
+    <label class="history-control"><span data-i18n="rangeTo">종료일</span><input type="date" id="cmp-to" onchange="renderCompare()" aria-describedby="cmp-range-error"></label>
+    <div class="history-metric-toggle" role="group" aria-label="그래프 지표 선택" data-i18n-aria-label="chartMetricAria">
+      <button type="button" data-cmp-metric="consumption" data-i18n="consumptionRate">소진율</button>
+      <button type="button" data-cmp-metric="amount" data-i18n="availableQuota">가용 쿼터</button>
+      <button type="button" data-cmp-metric="actual" data-i18n="actualRemainingQuota">실제잔여 쿼터</button>
+      <button type="button" data-cmp-metric="pending" data-i18n="awaitingAllocation">대기할당</button>
+    </div>
+    <button class="tool-btn primary-btn" type="button" onclick="exportCompareToExcel()"><span data-i18n="excelDownload">Excel 다운로드</span></button>
+    <button class="tool-btn" type="button" onclick="selectTopRiskCategories()" data-i18n="selectRisks">위험 품목 선택</button>
+    <button class="tool-btn" type="button" onclick="clearCompareCategories()" data-i18n="clearSelection">선택 초기화</button>
+    <span class="cmp-note" data-i18n="maxSeries">품목은 최대 8개까지 선택</span>
+    <span class="cmp-range-error" id="cmp-range-error" aria-live="polite"></span>
+  </div>
+  <div class="cmp-status" id="cmp-status" role="status" aria-live="polite"></div>
+  <div class="cmp-chips" id="cmp-chips"></div>
+  <div class="cmp-grid">
+    <div class="cmp-panel">
+      <div class="cmp-panel-head"><b class="history-chart-title" id="cmp-chart-title">-</b><span class="cmp-note" data-i18n="forecastLegend">점선 = 통계 추세 예측 (참고용)</span></div>
+      <div class="history-chart" id="cmp-chart"></div>
+    </div>
+    <div class="cmp-panel">
+      <div class="cmp-panel-head"><b class="history-chart-title" data-i18n="consumedShare">선택 품목별 소진량 비중</b><span class="cmp-note" id="cmp-donut-date">-</span></div>
+      <div id="cmp-donut"></div>
+    </div>
+  </div>
+  <div class="history-table-heading"><b data-i18n="compareTable">품목 비교</b><span data-i18n="forecastNote">예측: 현재 분기 데이터 FORECAST · 5일 이상 누적 시 표시 · 참고용</span></div>
+  <div class="table-wrap">
+    <table id="cmp-table">
+      <thead><tr>
+        <th data-i18n="category">카테고리</th>
+        <th id="cmp-col-start">-</th><th id="cmp-col-end">-</th><th class="sortable" role="button" tabindex="0" onclick="toggleCompareSort('delta')" onkeydown="handleSortKey(event, () => toggleCompareSort('delta'))" data-i18n="change">증감</th>
+        <th class="sortable" role="button" tabindex="0" onclick="toggleCompareSort('forecast')" onkeydown="handleSortKey(event, () => toggleCompareSort('forecast'))" data-i18n="forecastQuarterEnd">통계 추정 분기말 소진율</th><th class="sortable" role="button" tabindex="0" onclick="toggleCompareSort('exhaustion')" onkeydown="handleSortKey(event, () => toggleCompareSort('exhaustion'))" data-i18n="forecastExhaustion">소진 예상일</th>
+        <th><span data-i18n="transferredQuota">이월량</span> (t)</th>
+      </tr></thead>
+      <tbody id="cmp-table-body"></tbody>
+    </table>
+  </div>
+</section>
+
+<footer id="footer-note"></footer>
+
+<div class="fta-tooltip" id="fta-tooltip"></div>
+
+<dialog class="history-dialog" id="order-history-dialog" aria-labelledby="order-history-title">
+  <div class="history-dialog-shell">
+    <header class="history-dialog-header">
+      <div>
+        <div class="history-dialog-eyebrow">Order history</div>
+        <h2 class="history-dialog-title" id="order-history-title">Order Number 이력</h2>
+        <div class="history-dialog-subtitle" id="order-history-subtitle"></div>
+      </div>
+      <button class="history-dialog-close" type="button" onclick="closeOrderHistory()" aria-label="닫기" data-i18n-aria-label="close">×</button>
+    </header>
+    <div class="history-dialog-body">
+      <div class="history-summary" id="order-history-summary"></div>
+      <div class="history-chart-toolbar">
+        <div class="history-chart-title" id="order-history-chart-title">날짜별 소진율</div>
+        <div class="history-metric-toggle" role="group" aria-label="그래프 지표 선택" data-i18n-aria-label="chartMetricAria">
+          <button type="button" class="active" data-history-metric="consumption_rate" data-i18n="consumptionRate">소진율</button>
+          <button type="button" data-history-metric="actual_remaining_t" data-i18n="actualRemaining">실제 잔여량</button>
+        </div>
+      </div>
+      <div class="history-chart" id="order-history-chart"></div>
+      <div class="history-table-heading">
+        <b data-i18n="dailyDetails">날짜별 상세 데이터</b>
+        <span data-i18n="missingDatesHidden">기록이 없는 날짜는 표시되지 않습니다.</span>
+      </div>
+      <div class="history-table-wrap">
+        <table class="history-detail-table">
+          <thead>
+            <tr>
+              <th data-i18n="referenceDate">기준일</th>
+              <th data-i18n="quarter">분기</th>
+              <th><span data-i18n="quarterlyQuota">분기 쿼터</span> (t)</th>
+              <th><span data-i18n="awaitingAllocation">대기할당</span> (t)</th>
+              <th><span data-i18n="remainingQuota">잔여 쿼터</span> (t)</th>
+              <th><span data-i18n="actualRemaining">실제잔여</span> (t)</th>
+              <th data-i18n="remainingRate">잔여율</th>
+              <th data-i18n="consumptionRate">소진율</th>
+              <th data-i18n="exhaustionDate">소진 날짜</th>
+            </tr>
+          </thead>
+          <tbody id="order-history-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<script src="/__/firebase/8.10.1/firebase-app.js"></script>
+<script src="/__/firebase/8.10.1/firebase-firestore.js"></script>
+<script src="/__/firebase/init.js"></script>
+<script>
+const I18N = {
+  ko: {
+    title: 'EU 철강 세이프가드 쿼터 모니터', loadingTaric: 'TARIC 쿼터 데이터를 불러오는 중입니다...',
+    currentQuarter: '현재 조회 분기', dataCollected: '데이터 수집 시각 (Data collected)',
+    euSiteUpdate: 'EU 사이트 최종 업데이트 (EU site update)', checkingStatus: '수집 상태 확인 중',
+    dailySummary: '기준일 변동 요약', comparePrevious: '직전 기록과 비교', rateJump: '소진율 +5%p 이상',
+    pendingJump: '대기할당 급증', lowRemaining: '실제잔여율 5% 이하', snapshotDate: '조회 기준일',
+    viewingHistory: '과거 데이터 조회 중', searchPlaceholder: '주문번호 / 원산지 (한글 가능)...',
+    viewAll: '전체 보기', showKg: 'kg 표시', hideKg: 'kg 숨기기', quickLowRemaining: '잔여율 5% 이하',
+    excelDownload: 'Excel 다운로드', visibleResults: '현재 화면 / 필터 결과', allData: '전체 데이터',
+    filtersApplied: '필터 적용 중:', quarterlyQuota: '분기 쿼터', awaitingAllocation: '대기할당',
+    remainingQuota: '잔여 쿼터', actualRemainingQuota: '실제잔여 쿼터', remainingRate: '잔여율',
+    consumptionRate: '소진율', exhaustionDate: '소진 날짜', actualRemaining: '실제 잔여량',
+    dailyDetails: '날짜별 상세 데이터', missingDatesHidden: '기록이 없는 날짜는 표시되지 않습니다.',
+    referenceDate: '기준일', quarter: '분기', close: '닫기', latest: '최신', cases: '{count}건',
+    overviewAria: '수집 상태와 일일 변동 요약', historyDateAria: '과거 현황 조회 기준일',
+    quickFilterAria: '빠른 필터', chartMetricAria: '그래프 지표 선택',
+    collectionOk: '수집 정상 · {success}/{total}', collectionPartial: '수집 일부 실패 · {success}/{total}',
+    failures: '실패 {count}건', euReferenceDate: 'EU 기준일', noComparison: '비교 기록 없음',
+    dailyActualRemaining: '날짜별 실제 잔여량', dailyConsumption: '날짜별 소진율',
+    noHistoryData: '표시할 이력 데이터가 없습니다.', chart: '그래프', recordsDays: '기록 <b>{count}일</b>',
+    period: '기간', latestConsumption: '최근 소진율', latestActualRemaining: '최근 실제잔여',
+    staleData: '⚠ 데이터가 오래됨 ({days}일 전 업데이트)', consumed: '{value}% 소진',
+    exhaustedCount: '{exhausted}/{count} 소진됨', availableCountries: '대상 국가: {count}개',
+    noMatchingData: '조건에 맞는 데이터가 없습니다.', overPending: '초과 대기',
+    overPendingTitle: '대기할당이 현재 잔여 쿼터보다 많습니다.', viewOrderHistory: 'Order Number {order} 날짜별 이력 보기',
+    displayed: '<span class="n">{shown}</span> / {total}건 표시 · 전체 소진 <span class="exh">{exhausted}</span>건',
+    footer: 'EU TARIC 쿼터 데이터 자동 수집 · Data collected: {date} · Europe/Berlin',
+    category: '카테고리', search: '검색', loadingFirestore: 'Firestore에서 최신 데이터를 불러오는 중입니다...',
+    noFirestoreData: 'Firestore에 저장된 쿼터 데이터가 없습니다.',
+    loadFailed: '데이터를 불러오지 못했습니다. 잠시 후 새로고침하거나 관리자에게 문의해 주세요.',
+    tabStatus: '현황', tabCompare: '비교·예측', rangeFrom: '시작일', rangeTo: '종료일',
+    availableQuota: '가용 쿼터', transferredQuota: '이월량', maxSeries: '품목은 최대 8개까지 선택',
+    forecastLegend: '점선 = 통계 추세 예측 (참고용)', consumedShare: '선택 품목별 소진량 비중 (미선택 품목은 기타)',
+    compareTable: '품목 비교', change: '증감', forecast: '예측',
+    forecastNote: '현재 분기 5일 이상 데이터의 통계 추세 예측 · 참고용',
+    forecastQuarterEnd: '통계 추정 분기말 소진율', forecastExhaustion: '소진 예상일', notEnoughData: '데이터 부족 ({count}/5일)',
+    noExhaustionInQuarter: '분기 내 없음', alreadyExhausted: '소진됨', others: '기타 (미선택)',
+    totalConsumed: '총 소진량', asOf: '{date} 기준', quarterFirstDay: '분기 첫 수집일 · 비교 대상 없음',
+    selectRisks: '위험 품목 선택', clearSelection: '선택 초기화', compareLoading: '비교 데이터를 불러오는 중입니다...',
+    compareRetry: '다시 시도', compareLoadFailed: '비교 데이터를 불러오지 못했습니다.',
+    compareBasis: '비교 {from}–{to} · 예측 기준 {date} · 수집 {success}/{total}',
+    compareComplete: '데이터 정상', compareIncomplete: '불완전 데이터 — 예측 제외',
+    rangeAdjusted: '시작일과 종료일을 올바른 순서로 바꿨습니다.', incompleteForecast: '불완전 데이터',
+    forecastMethod: '방법: 단순 선형회귀 · 최소 5일 · 참고용', trendFit: '추세 적합도 (R²)'
+  },
+  en: {
+    title: 'EU Steel Safeguard Quota Monitor', loadingTaric: 'Loading TARIC quota data...',
+    currentQuarter: 'Current quarter', dataCollected: 'Data collected', euSiteUpdate: 'EU site update',
+    checkingStatus: 'Checking collection status', dailySummary: 'Changes Since Previous Record',
+    comparePrevious: 'Compared with previous record', rateJump: 'Consumption +5pp or more',
+    pendingJump: 'Awaiting allocation +100t or more', lowRemaining: 'Actual remaining rate 5% or less',
+    snapshotDate: 'Reference date', viewingHistory: 'Viewing historical data',
+    searchPlaceholder: 'Order number / origin / item...', viewAll: 'View all', showKg: 'Show kg', hideKg: 'Hide kg',
+    quickLowRemaining: 'Remaining rate 5% or less', excelDownload: 'Download Excel',
+    visibleResults: 'Current view / filtered results', allData: 'All data', filtersApplied: 'Active filters:',
+    quarterlyQuota: 'Quarterly quota', awaitingAllocation: 'Awaiting allocation', remainingQuota: 'Remaining quota',
+    actualRemainingQuota: 'Actual remaining quota', remainingRate: 'Remaining rate', consumptionRate: 'Consumption rate',
+    exhaustionDate: 'Exhaustion date', actualRemaining: 'Actual remaining', dailyDetails: 'Daily details',
+    missingDatesHidden: 'Dates without records are not shown.', referenceDate: 'Reference date', quarter: 'Quarter',
+    close: 'Close', latest: 'Latest', cases: '{count}', overviewAria: 'Collection status and daily changes',
+    historyDateAria: 'Historical reference date', quickFilterAria: 'Quick filters', chartMetricAria: 'Select chart metric',
+    collectionOk: 'Collection successful · {success}/{total}',
+    collectionPartial: 'Partial collection failure · {success}/{total}', failures: '{count} failed',
+    euReferenceDate: 'EU reference date', noComparison: 'No previous record',
+    dailyActualRemaining: 'Actual remaining by date', dailyConsumption: 'Consumption rate by date',
+    noHistoryData: 'No historical data available.', chart: 'chart', recordsDays: '<b>{count} days</b> recorded',
+    period: 'Period', latestConsumption: 'Latest consumption', latestActualRemaining: 'Latest actual remaining',
+    staleData: '⚠ Data is outdated (updated {days} days ago)', consumed: '{value}% consumed',
+    exhaustedCount: '{exhausted}/{count} exhausted', availableCountries: 'Available countries: {count}',
+    noMatchingData: 'No data matches the selected conditions.', overPending: 'Pending exceeds balance',
+    overPendingTitle: 'Awaiting allocation exceeds the current remaining quota.',
+    viewOrderHistory: 'View history for Order Number {order}',
+    displayed: '<span class="n">{shown}</span> / {total} shown · <span class="exh">{exhausted}</span> exhausted',
+    footer: 'EU TARIC quota data collected automatically · Data collected: {date} · Europe/Berlin',
+    category: 'Category', search: 'Search', loadingFirestore: 'Loading the latest data from Firestore...',
+    noFirestoreData: 'No quota data is stored in Firestore.',
+    loadFailed: 'Unable to load data. Please refresh later or contact the administrator.',
+    tabStatus: 'Status', tabCompare: 'Compare · Forecast', rangeFrom: 'From', rangeTo: 'To',
+    availableQuota: 'Available quota', transferredQuota: 'Carried over', maxSeries: 'Select up to 8 categories',
+    forecastLegend: 'Dashed = statistical trend forecast (reference only)', consumedShare: 'Selected categories consumed share (unselected grouped as Others)',
+    compareTable: 'Category comparison', change: 'Change', forecast: 'forecast',
+    forecastNote: 'Statistical trend from at least 5 current-quarter days · reference only',
+    forecastQuarterEnd: 'Estimated quarter-end consumption', forecastExhaustion: 'Forecast exhaustion date',
+    notEnoughData: 'Not enough data ({count}/5 days)', noExhaustionInQuarter: 'Not this quarter', alreadyExhausted: 'Exhausted',
+    others: 'Others (not selected)', totalConsumed: 'Total consumed', asOf: 'as of {date}',
+    quarterFirstDay: 'First record of the quarter · no comparison',
+    selectRisks: 'Select highest risk', clearSelection: 'Clear selection', compareLoading: 'Loading comparison data...',
+    compareRetry: 'Retry', compareLoadFailed: 'Unable to load comparison data.',
+    compareBasis: 'Compare {from}–{to} · forecast as of {date} · collected {success}/{total}',
+    compareComplete: 'Data complete', compareIncomplete: 'Incomplete data — forecast excluded',
+    rangeAdjusted: 'Start and end dates were put in chronological order.', incompleteForecast: 'Incomplete data',
+    forecastMethod: 'Method: ordinary least squares · minimum 5 days · reference only', trendFit: 'Trend fit (R²)'
+  }
+};
+
+const ITEM_NAMES_EN = {
+  '열연강판': 'Hot-rolled Flat Products', '냉연': 'Cold-rolled Flat Products',
+  '전강': 'Electrical Sheets', '도금A': 'Metallic Coated Sheets A',
+  '도금B': 'Metallic Coated Sheets B', '칼라': 'Organic Coated Sheets',
+  '후판': 'Heavy Plate', 'STS CR': 'Stainless Cold-rolled Products',
+  '선재': 'Wire Rod', 'ETP': 'Tin Mill Products'
+};
+
+let currentLanguage = 'ko';
+function t(key, variables = {}) {
+  let value = I18N[currentLanguage]?.[key] ?? I18N.ko[key] ?? key;
+  for (const [name, replacement] of Object.entries(variables)) {
+    value = value.replaceAll(`{${name}}`, String(replacement));
+  }
+  return value;
+}
+function displayItemName(value) {
+  const original = String(value || '-');
+  return currentLanguage === 'en' ? (ITEM_NAMES_EN[original] || original) : original;
+}
+function applyStaticTranslations() {
+  document.documentElement.lang = currentLanguage;
+  document.title = t('title');
+  document.querySelectorAll('[data-i18n]').forEach(element => {
+    element.textContent = t(element.dataset.i18n);
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+    element.placeholder = t(element.dataset.i18nPlaceholder);
+  });
+  document.querySelectorAll('[data-i18n-aria-label]').forEach(element => {
+    element.setAttribute('aria-label', t(element.dataset.i18nAriaLabel));
+  });
+  document.getElementById('lang-ko-btn')?.classList.toggle('active', currentLanguage === 'ko');
+  document.getElementById('lang-en-btn')?.classList.toggle('active', currentLanguage === 'en');
+  const kgButton = document.getElementById('kg-toggle');
+  if (kgButton) kgButton.textContent = showKg ? t('hideKg') : t('showKg');
+}
+function setLanguage(language) {
+  currentLanguage = language === 'en' ? 'en' : 'ko';
+  try { localStorage.setItem('quota-dashboard-language', currentLanguage); } catch (error) {}
+  applyStaticTranslations();
+  if (DATA) {
+    initHistorySelector();
+    render();
+    const dialog = document.getElementById('order-history-dialog');
+    if (dialog?.open && activeHistoryOrder) renderOrderHistory();
+    if (activeView === 'compare') renderCompare();
+  }
+}
+
+let DATA = null;
+let SNAPSHOTS = {};
+// Full list of every collected date from the lightweight category summaries.
+// Populated once at load; full snapshot bodies are fetched lazily on demand
+// (see selectHistoryDate / ensureFullHistoryLoaded) so cost never grows with
+// accumulated history.
+let HISTORY_DATES = [];
+let latestSnapshotDate = null;
+
+function initHistorySelector() {
+  const select = document.getElementById('history-date');
+  select.innerHTML = '';
+  for (const { date } of HISTORY_DATES) {
+    const option = document.createElement('option');
+    option.value = date;
+    option.textContent = date + (date === latestSnapshotDate ? ` (${t('latest')})` : '');
+    select.appendChild(option);
+  }
+  if (latestSnapshotDate) select.value = latestSnapshotDate;
+}
+
+async function selectHistoryDate(snapshotDate) {
+  if (!SNAPSHOTS[snapshotDate]) {
+    // Lazily fetch the chosen date plus its immediate predecessor (from the
+    // already-loaded date list) so the daily-change comparison stays correct.
+    const index = HISTORY_DATES.findIndex(entry => entry.date === snapshotDate);
+    const wanted = [snapshotDate, HISTORY_DATES[index + 1]?.date].filter(date => date && !SNAPSHOTS[date]);
+    const docs = await Promise.all(wanted.map(date => firebase.firestore().collection("quota_snapshots").doc(date).get()));
+    docs.forEach(doc => { if (doc.exists) SNAPSHOTS[doc.id] = doc.data(); });
+  }
+  if (!SNAPSHOTS[snapshotDate]) return;
+  DATA = SNAPSHOTS[snapshotDate];
+  activeCategory = null;
+  activeQuickFilter = null;
+  sortKey = null;
+  sortDirection = 1;
+  render();
+}
+
+function updateHistoryModeBadge() {
+  const currentDate = DATA.snapshot_date || String(DATA.last_updated || '').slice(0, 10);
+  const badge = document.getElementById('history-mode-badge');
+  if (badge) badge.classList.toggle('visible', currentDate !== latestSnapshotDate);
+}
+
+let activeCategory = null;
+let searchTerm = '';
+let sortKey = null;
+let sortDirection = 1;
+let activeQuickFilter = null;
+let showKg = false;
+let DAILY_SUMMARY = null;
+
+(function initLanguage() {
+  try { currentLanguage = localStorage.getItem('quota-dashboard-language') === 'en' ? 'en' : 'ko'; } catch (error) {}
+  applyStaticTranslations();
+})();
+
+const SEARCH_ALIASES = {
+  '일본': ['japan'],
+  '영국': ['united kingdom', 'uk'],
+  '한국': ['korea', 'south korea', 'republic of korea'],
+  '대한민국': ['korea', 'south korea', 'republic of korea'],
+  '터키': ['turkiye', 'turkey'],
+  '튀르키예': ['turkiye', 'turkey'],
+  '인도': ['india'],
+  '우크라이나': ['ukraine'],
+  '이집트': ['egypt'],
+  '대만': ['taiwan'],
+  '베트남': ['viet nam', 'vietnam'],
+  '세르비아': ['serbia'],
+  '스위스': ['switzerland'],
+  '인도네시아': ['indonesia'],
+  '남아공': ['south africa'],
+  '남아프리카': ['south africa'],
+  '북마케도니아': ['north macedonia'],
+};
+
+function toggleSort(key) {
+  // consumption_rate: 높은 것 먼저(-1), remaining_rate: 낮은 것 먼저(1), date: 이른 것 먼저(1)
+  const initialDirection = key === 'consumption_rate' ? -1 : 1;
+
+  if (sortKey !== key) {
+    // First click: consumption high-to-low, dates earliest-to-latest.
+    sortKey = key;
+    sortDirection = initialDirection;
+  } else if (sortDirection === initialDirection) {
+    // Second click: reverse the current order.
+    sortDirection = -initialDirection;
+  } else {
+    // Third click: restore the original source order.
+    sortKey = null;
+    sortDirection = 1;
+  }
+  render();
+}
+
+function handleSortKey(event, action) {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    action();
+  }
+}
+
+function updateSortIndicators() {
+  const indicators = {
+    'consumption_rate': document.getElementById('sort-consumption_rate'),
+    'exhaustion_date': document.getElementById('sort-exhaustion_date'),
+    'remaining_rate': document.getElementById('sort-remaining_rate'),
+  };
+  for (const [key, el] of Object.entries(indicators)) {
+    if (!el) continue;
+    el.textContent = sortKey === key ? (sortDirection === 1 ? '▲' : '▼') : '';
+  }
+}
+
+/* ---------- Theme ---------- */
+function setTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  try { localStorage.setItem('quota-dashboard-theme-v2', theme); } catch (e) {}
+  document.getElementById('theme-dark-btn').classList.toggle('active', theme === 'dark');
+  document.getElementById('theme-light-btn').classList.toggle('active', theme === 'light');
+}
+(function initTheme() {
+  let saved = 'light';
+  try { saved = localStorage.getItem('quota-dashboard-theme-v2') || 'light'; } catch (e) {}
+  setTheme(saved);
+})();
+
+/* ---------- Formatting ---------- */
+function fmt(n) {
+  if (n === null || n === undefined || isNaN(n)) return '-';
+  return Math.round(n).toLocaleString();
+}
+function fmtT(n) {
+  if (n === null || n === undefined || isNaN(n)) return '-';
+  return Math.round(n).toLocaleString();
+}
+function fmtPct(n) {
+  if (n === null || n === undefined || isNaN(n)) return '-';
+  return (Number(n) * 100).toFixed(1) + '%';
+}
+// 소진율 전용: 100% 초과 시 ">100%" 표시 (진행바와 일관성 유지)
+function fmtConsumptionRate(n) {
+  if (n === null || n === undefined || isNaN(n)) return '-';
+  const pct = Number(n) * 100;
+  if (pct > 100) return '>100%';
+  return pct.toFixed(1) + '%';
+}
+function formatIsoDate(value) {
+  const match = String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return match ? `${match[1]}-${match[2]}-${match[3]}` : '-';
+}
+function formatLocalDate(date) {
+  const pad = value => String(value).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+function formatBerlinDateTime(value) {
+  if (!value) return '-';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '-';
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23',
+    timeZoneName: 'short',
+  }).formatToParts(date);
+  const get = type => parts.find(part => part.type === type)?.value || '';
+  return `${get('year')}-${get('month')}-${get('day')} ${get('hour')}:${get('minute')}:${get('second')} ${get('timeZoneName')}`;
+}
+function displayOrigin(value) {
+  return String(value || '-').replace(/Other (?:contries|countries)/gi, 'Other countries');
+}
+
+/* ---------- Collection health / daily change ---------- */
+function selectedSnapshotDate() {
+  return DATA.snapshot_date || document.getElementById('history-date').value || String(DATA.last_updated || '').slice(0, 10);
+}
+
+function previousSnapshot() {
+  const dates = Object.keys(SNAPSHOTS).sort();
+  const currentDate = selectedSnapshotDate();
+  const index = dates.indexOf(currentDate);
+  if (index <= 0) return null;
+  const previous = SNAPSHOTS[dates[index - 1]];
+  // A new quarter resets every quota; never compare across the boundary.
+  if ((previous.quarter_label || '') !== (DATA.quarter_label || '')) return null;
+  return { date: dates[index - 1], data: previous };
+}
+
+function calculateDailySummary() {
+  const previous = previousSnapshot();
+  const currentRecords = Array.isArray(DATA.records) ? DATA.records : [];
+  const lowRemaining = currentRecords.filter(record =>
+    record.remaining_rate !== null && record.remaining_rate !== undefined &&
+    Number.isFinite(Number(record.remaining_rate)) && Number(record.remaining_rate) <= 0.05
+  ).map(record => String(record.order_number));
+  const summary = {
+    currentDate: selectedSnapshotDate(), previousDate: previous?.date || null,
+    rateJump: [], pendingJump: [], lowRemaining,
+  };
+  if (!previous || !Array.isArray(previous.data.records)) return summary;
+
+  const priorByOrder = new Map(previous.data.records.map(record => [String(record.order_number), record]));
+  for (const record of currentRecords) {
+    const order = String(record.order_number || '');
+    const prior = priorByOrder.get(order);
+    if (!prior) continue;
+    if (record.consumption_rate !== null && record.consumption_rate !== undefined &&
+        prior.consumption_rate !== null && prior.consumption_rate !== undefined) {
+      const rateDelta = Number(record.consumption_rate) - Number(prior.consumption_rate);
+      if (Number.isFinite(rateDelta) && rateDelta >= 0.05) summary.rateJump.push(order);
+    }
+    if (record.pending_t !== null && record.pending_t !== undefined &&
+        prior.pending_t !== null && prior.pending_t !== undefined) {
+      const pendingDelta = Number(record.pending_t) - Number(prior.pending_t);
+      if (Number.isFinite(pendingDelta) && pendingDelta >= 100) summary.pendingJump.push(order);
+    }
+  }
+  return summary;
+}
+
+function renderCollectionHealth() {
+  const health = document.getElementById('collection-health');
+  const success = Number(DATA.count ?? DATA.records?.length ?? 0);
+  const total = Number(DATA.total_attempted ?? success);
+  const failures = Array.isArray(DATA.failed_order_numbers)
+    ? DATA.failed_order_numbers
+    : (DATA.errors || []).map(error => error.order_number).filter(Boolean);
+  health.classList.remove('warning', 'error');
+  if (success < total) health.classList.add(success / Math.max(total, 1) >= 0.9 ? 'warning' : 'error');
+  document.getElementById('health-title').textContent = success === total
+    ? t('collectionOk', { success, total })
+    : t('collectionPartial', { success, total });
+  document.getElementById('health-meta').innerHTML = failures.length
+    ? `${t('failures', { count: failures.length })} · <span class="failed-orders">${failures.map(escapeHtml).join(', ')}</span>`
+    : `${t('failures', { count: 0 })} · ${t('euReferenceDate')} ${formatIsoDate(DATA.site_last_update)}`;
+}
+
+function renderDailySummary() {
+  DAILY_SUMMARY = calculateDailySummary();
+  const setCount = (id, values) => { document.getElementById(id).textContent = t('cases', { count: values.length }); };
+  setCount('rate-jump-count', DAILY_SUMMARY.rateJump);
+  setCount('pending-jump-count', DAILY_SUMMARY.pendingJump);
+  setCount('low-remaining-count', DAILY_SUMMARY.lowRemaining);
+  document.getElementById('comparison-period').textContent = DAILY_SUMMARY.previousDate
+    ? `${DAILY_SUMMARY.previousDate} → ${DAILY_SUMMARY.currentDate}`
+    : Object.keys(SNAPSHOTS).some(date => date < DAILY_SUMMARY.currentDate)
+      ? `${DAILY_SUMMARY.currentDate} · ${t('quarterFirstDay')}`
+      : `${DAILY_SUMMARY.currentDate || '-'} · ${t('noComparison')}`;
+  // summary-filter 카드: active 클래스 (카드 스타일)
+  document.querySelectorAll('[data-summary-filter]').forEach(button => {
+    button.classList.toggle('active', button.dataset.summaryFilter === activeQuickFilter);
+  });
+  // toolbar quick-filter 버튼: active-btn 클래스 (버튼 스타일)
+  const lowBtn = document.getElementById('filter-low-remaining');
+  if (lowBtn) lowBtn.classList.toggle('active-btn', activeQuickFilter === 'low-remaining');
+}
+
+/* ---------- Order-number history ---------- */
+let orderHistoryIndex = null;
+let activeHistoryOrder = null;
+let activeHistoryMetric = 'consumption_rate';
+
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function buildOrderHistoryIndex() {
+  const index = {};
+  for (const snapshotDate of Object.keys(SNAPSHOTS).sort()) {
+    const snapshot = SNAPSHOTS[snapshotDate];
+    if (!snapshot || !Array.isArray(snapshot.records)) continue;
+    for (const record of snapshot.records) {
+      const orderNumber = String(record.order_number || '');
+      if (!orderNumber) continue;
+      if (!index[orderNumber]) index[orderNumber] = [];
+      index[orderNumber].push({
+        snapshot_date: snapshotDate,
+        quarter_label: snapshot.quarter_label || '',
+        ...record,
+      });
+    }
+  }
+  return index;
+}
+
+function orderHistoryFor(orderNumber) {
+  if (!orderHistoryIndex) orderHistoryIndex = buildOrderHistoryIndex();
+  return orderHistoryIndex[String(orderNumber)] || [];
+}
+
+function historyMetricConfig(metric) {
+  if (metric === 'actual_remaining_t') {
+    return {
+      key: 'actual_remaining_t',
+      title: t('dailyActualRemaining'),
+      value: point => Number(point.actual_remaining_t),
+      axis: value => `${Math.round(value).toLocaleString()} t`,
+      tooltip: value => `${Math.round(value).toLocaleString()} t`,
+      fixedMax: null,
+    };
+  }
+  return {
+    key: 'consumption_rate',
+    title: t('dailyConsumption'),
+    value: point => Number(point.consumption_rate) * 100,
+    axis: value => `${Math.round(value)}%`,
+    tooltip: value => `${value.toFixed(1)}%`,
+    fixedMax: 100,
+  };
+}
+
+// Shared multi-series SVG line chart (order-history dialog + compare view).
+// series: [{ name, color, dashed?, points: [{ date, value, quarter_label? }] }]
+function renderLineChart(container, series, config) {
+  const lines = series
+    .map(line => ({ ...line, points: line.points.filter(point => Number.isFinite(point.value)) }))
+    .filter(line => line.points.length);
+  if (!lines.length) {
+    container.innerHTML = `<div class="history-chart-empty">${escapeHtml(t('noHistoryData'))}</div>`;
+    return;
+  }
+
+  const width = 960;
+  const height = 300;
+  const margin = { top: 28, right: 28, bottom: 50, left: 86 };
+  const plotWidth = width - margin.left - margin.right;
+  const plotHeight = height - margin.top - margin.bottom;
+  const all = lines.flatMap(line => line.points);
+  const dates = [...new Set(all.map(point => point.date))].sort();
+  const timeOf = date => new Date(date + 'T00:00:00').getTime();
+  const minTime = timeOf(dates[0]);
+  const maxTime = timeOf(dates[dates.length - 1]);
+  const observedMax = Math.max(1, ...all.map(point => Math.max(0, point.value)));
+  const maxValue = config.fixedMax ? Math.max(config.fixedMax, observedMax * 1.05) : observedMax * 1.08;
+  const xAt = date => maxTime === minTime
+    ? margin.left + plotWidth / 2
+    : margin.left + ((timeOf(date) - minTime) / (maxTime - minTime)) * plotWidth;
+  const yAt = value => margin.top + plotHeight - (Math.max(0, value) / maxValue) * plotHeight;
+
+  const grid = [];
+  for (let i = 0; i <= 4; i++) {
+    const y = margin.top + (plotHeight / 4) * i;
+    grid.push(`<line x1="${margin.left}" y1="${y}" x2="${width - margin.right}" y2="${y}" stroke="var(--border-soft)"/>`);
+    grid.push(`<text x="${margin.left - 12}" y="${y + 4}" text-anchor="end" fill="var(--text-faint)" font-size="10" font-family="var(--mono)">${escapeHtml(config.axis(maxValue * (1 - i / 4)))}</text>`);
+  }
+
+  const quarterOf = {};
+  for (const point of all) if (point.quarter_label && !quarterOf[point.date]) quarterOf[point.date] = point.quarter_label;
+  const quarterMarkers = [];
+  let previousQuarter = null;
+  for (const date of dates) {
+    const quarter = quarterOf[date];
+    if (!quarter || quarter === previousQuarter) continue;
+    previousQuarter = quarter;
+    const x = xAt(date);
+    quarterMarkers.push(`<line x1="${x}" y1="${margin.top}" x2="${x}" y2="${margin.top + plotHeight}" stroke="var(--warn)" stroke-width="1" stroke-dasharray="4 5" opacity=".55"/>`);
+    quarterMarkers.push(`<text x="${Math.min(x + 5, width - margin.right - 45)}" y="${margin.top + 12}" fill="var(--warn)" font-size="9" font-family="var(--mono)">${escapeHtml(quarter)}</text>`);
+  }
+
+  const paths = lines.map(line => {
+    const d = line.points.map((point, index) => `${index ? 'L' : 'M'} ${xAt(point.date).toFixed(2)} ${yAt(point.value).toFixed(2)}`).join(' ');
+    return `<path d="${d}" fill="none" stroke="${line.color}" stroke-width="2"${line.dashed ? ' stroke-dasharray="6 5"' : ''} stroke-linejoin="round" stroke-linecap="round"/>`;
+  }).join('');
+  const circles = lines.flatMap(line => line.points.map((point, index) => {
+    if (line.dashed) {
+      return index === line.points.length - 1
+        ? `<circle cx="${xAt(point.date)}" cy="${yAt(point.value)}" r="4" fill="var(--panel)" stroke="${line.color}" stroke-width="2"/>`
+        : '';
+    }
+    const selected = point.date === config.selectedDate;
+    return `<circle cx="${xAt(point.date)}" cy="${yAt(point.value)}" r="${selected ? 5 : 3.5}" fill="${line.color}" stroke="${selected ? 'var(--text)' : 'var(--panel)'}" stroke-width="${selected ? 2.5 : 1.5}"/>`;
+  })).join('');
+
+  const labelDates = [...new Set([dates[0], dates[Math.floor((dates.length - 1) / 2)], dates[dates.length - 1]])];
+  const xLabels = labelDates.map((date, index) =>
+    `<text x="${xAt(date)}" y="${height - 18}" text-anchor="${labelDates.length === 1 ? 'middle' : ['start', 'middle', 'end'][index === labelDates.length - 1 ? 2 : Math.min(index, 1)]}" fill="var(--text-faint)" font-size="10" font-family="var(--mono)">${escapeHtml(date)}</text>`
+  ).join('');
+
+  container.innerHTML = `
+    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(config.title)} ${escapeHtml(t('chart'))}">
+      ${grid.join('')}
+      ${quarterMarkers.join('')}
+      ${paths}
+      ${circles}
+      ${xLabels}
+      <line class="chart-crosshair" y1="${margin.top}" y2="${margin.top + plotHeight}" stroke="var(--text-faint)" visibility="hidden"/>
+      <rect class="chart-hit" x="${margin.left}" y="${margin.top}" width="${plotWidth}" height="${plotHeight}" fill="transparent"/>
+    </svg>
+    <div class="chart-tip" hidden></div>`;
+
+  // Crosshair tooltip: snaps to the nearest date and lists every series there.
+  const svg = container.querySelector('svg');
+  if (!svg) return;
+  const crosshair = svg.querySelector('.chart-crosshair');
+  const tip = container.querySelector('.chart-tip');
+  svg.querySelector('.chart-hit').addEventListener('pointermove', event => {
+    const box = svg.getBoundingClientRect();
+    const x = (event.clientX - box.left) * width / box.width;
+    const date = dates.reduce((best, candidate) => Math.abs(xAt(candidate) - x) < Math.abs(xAt(best) - x) ? candidate : best);
+    crosshair.setAttribute('x1', xAt(date));
+    crosshair.setAttribute('x2', xAt(date));
+    crosshair.setAttribute('visibility', 'visible');
+    const rows = lines.flatMap(line => line.points
+      .filter((point, index) => point.date === date && !(line.dashed && index === 0))
+      .map(point => `<div><span class="tip-key" style="border-top-color:${line.color};${line.dashed ? 'border-top-style:dashed;' : ''}"></span><b>${escapeHtml(config.format(point.value))}</b><span>${escapeHtml(line.name || '')}</span></div>`));
+    tip.innerHTML = `<b>${escapeHtml(date)}</b>${rows.join('')}`;
+    tip.hidden = false;
+    const left = xAt(date) / width * box.width;
+    const flip = left > box.width / 2;
+    tip.style.left = flip ? 'auto' : `${left + 12}px`;
+    tip.style.right = flip ? `${box.width - left + 12}px` : 'auto';
+  });
+  svg.querySelector('.chart-hit').addEventListener('pointerleave', () => {
+    tip.hidden = true;
+    crosshair.setAttribute('visibility', 'hidden');
+  });
+}
+
+function renderOrderHistoryChart(points) {
+  const config = historyMetricConfig(activeHistoryMetric);
+  document.getElementById('order-history-chart-title').textContent = config.title;
+  renderLineChart(document.getElementById('order-history-chart'), [{
+    name: '', color: 'var(--steel)',
+    points: points.map(point => ({ date: point.snapshot_date, quarter_label: point.quarter_label, value: config.value(point) })),
+  }], {
+    title: config.title, axis: config.axis, format: config.tooltip, fixedMax: config.fixedMax,
+    selectedDate: document.getElementById('history-date').value,
+  });
+}
+
+function renderOrderHistoryTable(points) {
+  const selectedDate = document.getElementById('history-date').value;
+  const tbody = document.getElementById('order-history-table-body');
+  tbody.innerHTML = [...points].reverse().map(point => `
+    <tr class="${point.snapshot_date === selectedDate ? 'selected-snapshot' : ''}">
+      <td>${escapeHtml(point.snapshot_date)}</td>
+      <td>${escapeHtml(point.quarter_label || '-')}</td>
+      <td>${fmtT(point.quarterly_t)}</td>
+      <td>${fmtT(point.pending_t)}</td>
+      <td>${fmtT(point.remaining_t)}</td>
+      <td>${fmtT(point.actual_remaining_t)}</td>
+      <td>${fmtPct(point.remaining_rate)}</td>
+      <td>${fmtPct(point.consumption_rate)}</td>
+      <td>${escapeHtml(point.exhaustion_date || '-')}</td>
+    </tr>`).join('');
+}
+
+function renderOrderHistory() {
+  const points = orderHistoryFor(activeHistoryOrder);
+  if (!points.length) return;
+  const latest = points[points.length - 1];
+  document.getElementById('order-history-title').textContent = `Order Number ${activeHistoryOrder}`;
+  document.getElementById('order-history-subtitle').textContent =
+    `${latest.category || '-'} · ${displayItemName(latest.item_name)} · ${displayOrigin(latest.origin)}`;
+  document.getElementById('order-history-summary').innerHTML = `
+    <span class="history-summary-chip">${t('recordsDays', { count: points.length })}</span>
+    <span class="history-summary-chip">${t('period')} <b>${escapeHtml(points[0].snapshot_date)} ~ ${escapeHtml(latest.snapshot_date)}</b></span>
+    <span class="history-summary-chip">${t('latestConsumption')} <b>${fmtPct(latest.consumption_rate)}</b></span>
+    <span class="history-summary-chip">${t('latestActualRemaining')} <b>${fmtT(latest.actual_remaining_t)} t</b></span>`;
+  document.querySelectorAll('[data-history-metric]').forEach(button => {
+    button.classList.toggle('active', button.dataset.historyMetric === activeHistoryMetric);
+  });
+  renderOrderHistoryChart(points);
+  renderOrderHistoryTable(points);
+}
+
+let fullHistoryLoaded = false;
+
+// Per-order history needs every past snapshot's full record set (not just
+// the category rollup), so it can't reuse the lightweight compare cache.
+// It's opened occasionally by choice, so it's fetched once, on first open,
+// rather than on every dashboard visit.
+async function ensureFullHistoryLoaded() {
+  if (fullHistoryLoaded) return;
+  fullHistoryLoaded = true;
+  const query = await firebase.firestore().collection("quota_snapshots")
+    .orderBy("snapshot_date", "desc").limit(365).get();
+  query.forEach(doc => { if (!SNAPSHOTS[doc.id]) SNAPSHOTS[doc.id] = doc.data(); });
+  orderHistoryIndex = null;
+}
+
+async function openOrderHistory(orderNumber) {
+  activeHistoryOrder = String(orderNumber || '');
+  activeHistoryMetric = 'consumption_rate';
+  await ensureFullHistoryLoaded();
+  const points = orderHistoryFor(activeHistoryOrder);
+  if (!points.length) return;
+  renderOrderHistory();
+  const dialog = document.getElementById('order-history-dialog');
+  if (!dialog.open) dialog.showModal();
+}
+
+function closeOrderHistory() {
+  const dialog = document.getElementById('order-history-dialog');
+  if (dialog.open) dialog.close();
+}
+
+/* ---------- Compare & forecast view (#compare) ---------- */
+const MAX_COMPARE_SERIES = 8;       // --series-1..8: validated palette, never a 9th hue
+const FORECAST_MIN_POINTS = 5;
+const DAY_MS = 86400000;
+let activeView = 'status';
+let compareSlots = null;            // category -> palette slot; survivors keep their colour
+let compareMetric = 'consumption';
+
+const tonnes = value => `${Math.round(value).toLocaleString()} t`;
+const COMPARE_METRICS = {
+  consumption: { label: 'consumptionRate', value: m => m.amount > 0 ? (1 - m.actual / m.amount) * 100 : NaN,
+    format: value => `${value.toFixed(1)}%`, axis: value => `${Math.round(value)}%`, delta: value => `${value >= 0 ? '+' : ''}${value.toFixed(1)}%p`, fixedMax: 100 },
+  amount: { label: 'availableQuota', value: m => m.amount / 1000, format: tonnes, axis: tonnes },
+  actual: { label: 'actualRemainingQuota', value: m => m.actual / 1000, format: tonnes, axis: tonnes },
+  pending: { label: 'awaitingAllocation', value: m => m.pending / 1000, format: tonnes, axis: tonnes },
+};
+
+// Compare data comes from the tiny quota_category_summary collection, not
+// SNAPSHOTS — a few KB per date instead of ~70KB, so browsing years of
+// history costs about the same as browsing weeks. date -> { cat: {item_name,
+// amount, actual, pending, transferred} }, populated by fetchCompareRange().
+let compareCache = {};
+let compareMeta = {};
+let compareQuarterLoaded = false;
+let compareQuarterPromise = null;
+let compareRangeKey = null;
+let compareRenderId = 0;
+let compareSort = 'exhaustion';
+
+function summaryToTotals(doc) {
+  const map = {};
+  for (const [category, c] of Object.entries(doc.categories || {})) {
+    map[category] = {
+      item_name: c.item_name, amount: c.amount_kg || 0, actual: c.actual_remaining_kg || 0,
+      pending: c.pending_kg || 0, transferred: c.transferred_kg || 0,
+    };
+  }
+  return map;
+}
+
+// Fetches only the dates in [from, to] that aren't cached yet (HISTORY_DATES
+// already tells us which dates actually exist, so this never over-fetches).
+async function fetchCompareRange(from, to) {
+  const missing = HISTORY_DATES.some(e => e.date >= from && e.date <= to && !compareCache[e.date]);
+  if (!missing) return;
+  const query = await firebase.firestore().collection("quota_category_summary")
+    .where("date", ">=", from).where("date", "<=", to).get();
+  query.forEach(doc => {
+    const data = doc.data();
+    compareCache[doc.id] = summaryToTotals(data);
+    compareMeta[doc.id] = {
+      success: Number(data.success_count || 0), total: Number(data.total_attempted || 0),
+      failed: data.failed_order_numbers || [],
+    };
+  });
+}
+
+function ensureCompareQuarterLoaded(from, to) {
+  if (compareQuarterLoaded) return Promise.resolve();
+  if (!compareQuarterPromise) compareQuarterPromise = fetchCompareRange(from, to)
+    .then(() => { compareQuarterLoaded = true; })
+    .finally(() => { compareQuarterPromise = null; });
+  return compareQuarterPromise;
+}
+
+const latestSnapshotData = () => SNAPSHOTS[latestSnapshotDate] || DATA;
+const normalizeCompareRange = (from, to) => from <= to ? [from, to] : [to, from];
+const isIncompleteCompareDate = date => {
+  const meta = compareMeta[date];
+  return !!meta?.total && meta.success < meta.total;
+};
+
+const dayNumber = date => Date.parse(date + 'T00:00:00Z') / DAY_MS;
+const dayToDate = day => new Date(day * DAY_MS).toISOString().slice(0, 10);
+
+// Ordinary least squares, identical to Excel FORECAST.LINEAR / TREND.
+function linearForecast(points) {
+  if (points.length < FORECAST_MIN_POINTS) return null;
+  const meanX = points.reduce((sum, p) => sum + p.x, 0) / points.length;
+  const meanY = points.reduce((sum, p) => sum + p.y, 0) / points.length;
+  const sxx = points.reduce((sum, p) => sum + (p.x - meanX) ** 2, 0);
+  if (!sxx) return null;
+  const slope = points.reduce((sum, p) => sum + (p.x - meanX) * (p.y - meanY), 0) / sxx;
+  const intercept = meanY - slope * meanX;
+  const residual = points.reduce((sum, p) => sum + (p.y - (slope * p.x + intercept)) ** 2, 0);
+  const total = points.reduce((sum, p) => sum + (p.y - meanY) ** 2, 0);
+  return { slope, intercept, r2: total ? Math.max(0, 1 - residual / total) : 1 };
+}
+
+// Quarter boundaries are fixed (Jan/Apr/Jul/Oct start, +3 months -1 day) —
+// shared with renderQuarterAndFreshness's on-screen quarter range. Computed
+// entirely in UTC (like dayNumber/dayToDate above) so the result doesn't
+// shift by a day depending on the viewer's browser timezone.
+function quarterEndISO(startDateStr) {
+  const end = new Date(startDateStr + 'T00:00:00Z');
+  end.setUTCMonth(end.getUTCMonth() + 3);
+  end.setUTCDate(end.getUTCDate() - 1);
+  return end.toISOString().slice(0, 10);
+}
+
+function latestQuarterDates() {
+  const latest = latestSnapshotData();
+  return HISTORY_DATES
+    .filter(e => e.quarter_label === latest.quarter_label && compareCache[e.date] && !isIncompleteCompareDate(e.date))
+    .map(e => e.date)
+    .sort();
+}
+
+// Consumption-rate forecast for one category, fitted on the latest quarter only
+// (quotas reset each quarter, so older points would only mislead the line).
+function categoryForecast(category) {
+  const latest = latestSnapshotData();
+  const dates = latestQuarterDates();
+  const points = dates
+    .map(date => ({ date, x: dayNumber(date), y: COMPARE_METRICS.consumption.value(compareCache[date][category] || {}) }))
+    .filter(point => Number.isFinite(point.y));
+  const fit = linearForecast(points);
+  const last = points[points.length - 1];
+  const endDate = latest.start_date_used ? quarterEndISO(latest.start_date_used) : null;
+  if (!fit || !endDate) return { count: points.length };
+  const predict = date => Math.min(100, Math.max(0, fit.slope * dayNumber(date) + fit.intercept));
+  let exhaustDate = null;
+  if ((compareCache[last.date]?.[category]?.actual ?? Infinity) <= 0) exhaustDate = 'done';
+  else if (fit.slope > 0) {
+    const day = Math.max(Math.ceil((100 - fit.intercept) / fit.slope), last.x + 1);
+    if (dayToDate(day) <= endDate) exhaustDate = dayToDate(day);
+  }
+  return { count: points.length, lastDate: last.date, lastValue: last.y, endDate, endValue: predict(endDate), exhaustDate, r2: fit.r2 };
+}
+
+function applyRoute() {
+  activeView = location.hash === '#compare' ? 'compare' : 'status';
+  document.getElementById('status-view').hidden = activeView === 'compare';
+  document.getElementById('compare-view').hidden = activeView !== 'compare';
+  document.getElementById('tab-status').classList.toggle('active', activeView === 'status');
+  document.getElementById('tab-compare').classList.toggle('active', activeView === 'compare');
+  if (activeView === 'compare' && DATA) renderCompare();
+}
+
+function toggleCompareCategory(category) {
+  if (compareSlots[category]) delete compareSlots[category];
+  else {
+    const used = new Set(Object.values(compareSlots));
+    const slot = [...Array(MAX_COMPARE_SERIES)].map((_, i) => i + 1).find(i => !used.has(i));
+    if (slot) compareSlots[category] = slot;
+  }
+  renderCompare();
+}
+
+function setCompareStatus(kind, message, retry = false) {
+  const status = document.getElementById('cmp-status');
+  status.classList.remove('warning', 'error');
+  if (kind) status.classList.add(kind);
+  status.textContent = message;
+  if (retry) {
+    const button = document.createElement('button');
+    button.className = 'tool-btn';
+    button.textContent = t('compareRetry');
+    button.onclick = renderCompare;
+    status.appendChild(button);
+  }
+}
+
+function clearCompareCategories() {
+  compareSlots = {};
+  renderCompare();
+}
+
+function selectTopRiskCategories() {
+  const latest = compareCache[latestSnapshotDate] || {};
+  const ranked = Object.keys(latest).sort((a, b) => {
+    const [fa, fb] = [categoryForecast(a), categoryForecast(b)];
+    const date = f => f.exhaustDate === 'done' ? '' : (f.exhaustDate || '9999-12-31');
+    return date(fa).localeCompare(date(fb)) || (fb.endValue || 0) - (fa.endValue || 0);
+  }).slice(0, MAX_COMPARE_SERIES);
+  compareSlots = Object.fromEntries(ranked.map((category, index) => [category, index + 1]));
+  renderCompare();
+}
+
+function toggleCompareSort(key) {
+  compareSort = compareSort === key ? `-${key}` : key;
+  renderCompare();
+}
+
+async function renderCompare() {
+  if (!DATA || !latestSnapshotDate || !HISTORY_DATES.length) return;
+  const renderId = ++compareRenderId;
+  const latest = latestSnapshotData();
+  const fromInput = document.getElementById('cmp-from');
+  const toInput = document.getElementById('cmp-to');
+  const oldestDate = HISTORY_DATES[HISTORY_DATES.length - 1].date;
+  fromInput.min = toInput.min = oldestDate;
+  fromInput.max = toInput.max = latestSnapshotDate;
+  if (!fromInput.value) fromInput.value = latest.start_date_used || latestSnapshotDate;
+  if (!toInput.value) toInput.value = latestSnapshotDate;
+  const reversed = fromInput.value > toInput.value;
+  const [from, to] = normalizeCompareRange(fromInput.value, toInput.value);
+  fromInput.value = from;
+  toInput.value = to;
+  document.getElementById('cmp-range-error').textContent = reversed ? t('rangeAdjusted') : '';
+  setCompareStatus('', t('compareLoading'));
+
+  try {
+    await ensureCompareQuarterLoaded(latest.start_date_used || latestSnapshotDate, latestSnapshotDate);
+    if (renderId !== compareRenderId) return;
+    const rangeKey = `${from}|${to}`;
+    if (rangeKey !== compareRangeKey) {
+      await fetchCompareRange(from, to);
+      if (renderId !== compareRenderId) return;
+      compareRangeKey = rangeKey;
+    }
+  } catch (error) {
+    if (renderId === compareRenderId) setCompareStatus('error', t('compareLoadFailed'), true);
+    return;
+  }
+
+  const rangeDates = HISTORY_DATES.filter(e => e.date >= from && e.date <= to && compareCache[e.date])
+    .map(e => e.date).sort();
+  if (!rangeDates.length) {
+    document.getElementById('cmp-chart').innerHTML = `<div class="history-chart-empty">${escapeHtml(t('noHistoryData'))}</div>`;
+    document.getElementById('cmp-donut').innerHTML = '';
+    document.getElementById('cmp-table-body').innerHTML = `<tr><td colspan="7" class="empty-state">${escapeHtml(t('noMatchingData'))}</td></tr>`;
+    return;
+  }
+
+  const latestTotals = compareCache[latestSnapshotDate] || compareCache[rangeDates[rangeDates.length - 1]];
+  const meta = compareMeta[latestSnapshotDate] || { success: latest.count || 0, total: latest.total_attempted || 0, failed: latest.failed_order_numbers || [] };
+  const incomplete = !!meta.total && meta.success < meta.total;
+  setCompareStatus(incomplete ? 'warning' : '', `${t('compareBasis', {
+    from, to, date: latestSnapshotDate, success: meta.success, total: meta.total,
+  })} · ${t(incomplete ? 'compareIncomplete' : 'compareComplete')} · ${t('forecastMethod')}`);
+  const categories = Object.keys(latestTotals).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+  if (!compareSlots) {
+    compareSlots = {};
+    [...categories].sort((a, b) => latestTotals[b].amount - latestTotals[a].amount).slice(0, 5)
+      .forEach((category, index) => { compareSlots[category] = index + 1; });
+  }
+  const full = Object.keys(compareSlots).length >= MAX_COMPARE_SERIES;
+  const colorOf = category => compareSlots[category] ? `var(--series-${compareSlots[category]})` : 'var(--series-other)';
+  const nameOf = category => `CAT ${category} ${displayItemName(latestTotals[category].item_name)}`;
+  document.getElementById('cmp-chips').innerHTML = categories.map(category => {
+    const on = !!compareSlots[category];
+    return `<button type="button" class="cmp-chip${on ? ' active' : ''}" data-cat="${escapeHtml(category)}" aria-pressed="${on}"${!on && full ? ` disabled title="${escapeHtml(t('maxSeries'))}"` : ''}><span class="cmp-swatch" style="background:${on ? colorOf(category) : 'transparent'}"></span>${escapeHtml(nameOf(category))}</button>`;
+  }).join('');
+  document.querySelectorAll('[data-cmp-metric]').forEach(button => {
+    button.classList.toggle('active', button.dataset.cmpMetric === compareMetric);
+  });
+
+  const metric = COMPARE_METRICS[compareMetric];
+  const selected = categories.filter(category => compareSlots[category]);
+  // Forecasts are computed for every category (the table lists all of them),
+  // even though only the selected ones get a dashed line on the chart.
+  const forecasts = Object.fromEntries(categories.map(category => [category,
+    incomplete ? { count: 0, incomplete: true } : categoryForecast(category)]));
+  const valueAt = (date, category) => date && compareCache[date] ? metric.value(compareCache[date][category] || {}) : NaN;
+  const series = [];
+  for (const category of selected) {
+    series.push({
+      name: nameOf(category), color: colorOf(category),
+      points: rangeDates.map(date => ({ date, quarter_label: HISTORY_DATES.find(e => e.date === date)?.quarter_label, value: valueAt(date, category) })),
+    });
+    const f = forecasts[category];
+    if (compareMetric === 'consumption' && f.endDate && to >= f.lastDate) {
+      series.push({
+        name: `${nameOf(category)} · ${t('forecast')}`, color: colorOf(category), dashed: true,
+        points: [{ date: f.lastDate, value: f.lastValue }, { date: f.endDate, value: f.endValue }],
+      });
+    }
+  }
+  const title = t(metric.label);
+  document.getElementById('cmp-chart-title').textContent = title;
+  renderLineChart(document.getElementById('cmp-chart'), series,
+    { title, axis: metric.axis, format: metric.format, fixedMax: metric.fixedMax, selectedDate: null });
+
+  // Donut: consumed tonnes per selected category on the range end date.
+  const endDate = rangeDates[rangeDates.length - 1];
+  const endTotals = endDate ? compareCache[endDate] : {};
+  const consumed = m => Math.max(0, (m?.amount || 0) - (m?.actual || 0)) / 1000;
+  const slices = selected.map(category => ({ name: nameOf(category), color: colorOf(category), value: consumed(endTotals[category]) }));
+  slices.push({ name: t('others'), color: 'var(--series-other)',
+    value: categories.filter(category => !compareSlots[category]).reduce((sum, category) => sum + consumed(endTotals[category]), 0) });
+  document.getElementById('cmp-donut-date').textContent = endDate ? t('asOf', { date: endDate }) : '-';
+  renderDonut(document.getElementById('cmp-donut'), slices);
+
+  // Comparison table: every category, always — not just the ones charted,
+  // so consumption trends across all items are still comparable side by side.
+  // The same per-category rows also feed the Excel export (exportCompareToExcel)
+  // so the sheet always matches what's on screen.
+  const startDate = rangeDates[0];
+  document.getElementById('cmp-col-start').textContent = `${title} · ${startDate || '-'}`;
+  document.getElementById('cmp-col-end').textContent = `${title} · ${endDate || '-'}`;
+  const compareRows = categories.map(category => {
+    const start = valueAt(startDate, category);
+    const end = valueAt(endDate, category);
+    const delta = end - start;
+    const f = forecasts[category];
+    const transferred = (endTotals[category]?.transferred || 0) / 1000;
+    return { category, item_name: latestTotals[category].item_name, start, end, delta, forecast: f, transferred };
+  });
+  const descending = compareSort.startsWith('-');
+  const sortKey = compareSort.replace('-', '');
+  compareRows.sort((a, b) => {
+    let result;
+    if (sortKey === 'delta') result = (b.delta || 0) - (a.delta || 0);
+    else if (sortKey === 'forecast') result = (b.forecast.endValue || -1) - (a.forecast.endValue || -1);
+    else {
+      const date = row => row.forecast.exhaustDate === 'done' ? '' : (row.forecast.exhaustDate || '9999-12-31');
+      result = date(a).localeCompare(date(b));
+    }
+    return descending ? -result : result;
+  });
+  document.getElementById('cmp-table-body').innerHTML = compareRows.map(row => {
+    const { category, start, end, delta, forecast: f, transferred } = row;
+    const exhaust = f.exhaustDate === 'done' ? t('alreadyExhausted') : (f.exhaustDate || t('noExhaustionInQuarter'));
+    return `<tr>
+      <td><span class="cmp-swatch" style="display:inline-block;background:${colorOf(category)}"></span> ${escapeHtml(nameOf(category))}</td>
+      <td>${Number.isFinite(start) ? escapeHtml(metric.format(start)) : '-'}</td>
+      <td>${Number.isFinite(end) ? escapeHtml(metric.format(end)) : '-'}</td>
+      <td>${Number.isFinite(delta) ? escapeHtml(metric.delta ? metric.delta(delta) : `${delta >= 0 ? '+' : '-'}${tonnes(Math.abs(delta))}`) : '-'}</td>
+      <td>${f.incomplete ? escapeHtml(t('incompleteForecast')) : (f.endDate ? `${f.endValue.toFixed(1)}% <span class="cmp-note">(${escapeHtml(f.endDate)} · R² ${f.r2.toFixed(2)})</span>` : escapeHtml(t('notEnoughData', { count: f.count })))}</td>
+      <td>${f.endDate ? escapeHtml(exhaust) : '-'}</td>
+      <td>${fmtT(transferred)}</td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="7" class="empty-state">${escapeHtml(t('noMatchingData'))}</td></tr>`;
+  lastCompareExport = { metric: compareMetric, isPct: compareMetric === 'consumption', title, startDate, endDate, rows: compareRows, meta, forecastDate: latestSnapshotDate, incomplete };
+}
+
+/* ---------- Compare & forecast Excel export — same ExcelJS process as the
+   status export (exportToExcel): bold header, autofilter, freeze panes, and
+   a red fill+font on already-exhausted categories. ---------- */
+let lastCompareExport = null;
+
+function compareExportFilename() {
+  if (!lastCompareExport) return 'EU_Steel_Quota_Compare.xlsx';
+  const { metric, startDate, endDate } = lastCompareExport;
+  const parts = [startDate, endDate, sanitizeFilenamePart(t(COMPARE_METRICS[metric].label))].filter(Boolean);
+  return `EU_Steel_Quota_Compare_${parts.join('_')}.xlsx`;
+}
+
+async function exportCompareToExcel() {
+  if (!lastCompareExport || !lastCompareExport.rows.length) return;
+  const { isPct, title, startDate, endDate, rows, meta, forecastDate, incomplete } = lastCompareExport;
+  const quarterEndDate = rows.find(r => r.forecast.endDate)?.forecast.endDate;
+  const headers = [
+    'P/N', 'Item', `${title} (${startDate})`, `${title} (${endDate})`, t('change'),
+    quarterEndDate ? `${t('forecastQuarterEnd')} (${quarterEndDate})` : t('forecastQuarterEnd'),
+    t('trendFit'), t('forecastExhaustion'), `${t('transferredQuota')} (t)`,
+  ];
+  const PCT_COLS = [3, 4, 5, 6];
+  const QTY_COLS = isPct ? [9] : [3, 4, 5, 9];
+
+  const wb = new ExcelJS.Workbook();
+  const info = wb.addWorksheet('INFO');
+  info.addRows([
+    ['Comparison period', `${startDate} - ${endDate}`],
+    ['Forecast basis', forecastDate],
+    ['Collection completeness', `${meta.success}/${meta.total}${incomplete ? ' (incomplete)' : ''}`],
+    ['Forecast method', 'Ordinary least squares; minimum 5 complete daily records; reference only'],
+  ]);
+  info.getColumn(1).width = 24;
+  info.getColumn(2).width = 72;
+  const ws = wb.addWorksheet('COMPARE');
+  const headerRow = ws.addRow(headers);
+  headerRow.eachCell(cell => {
+    cell.font = { bold: true };
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE8EAED' } };
+    cell.alignment = { horizontal: 'center' };
+  });
+
+  const RED_FILL = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFC7CE' } };
+  const RED_FONT_COLOR = { argb: 'FF9C0006' };
+
+  for (const r of rows) {
+    const f = r.forecast;
+    const exhaust = f.exhaustDate === 'done' ? t('alreadyExhausted') : (f.exhaustDate || (f.endDate ? t('noExhaustionInQuarter') : null));
+    const row = ws.addRow([
+      r.category, displayItemName(r.item_name),
+      Number.isFinite(r.start) ? (isPct ? r.start / 100 : Math.round(r.start)) : null,
+      Number.isFinite(r.end) ? (isPct ? r.end / 100 : Math.round(r.end)) : null,
+      Number.isFinite(r.delta) ? (isPct ? r.delta / 100 : Math.round(r.delta)) : null,
+      f.endDate ? f.endValue / 100 : null,
+      f.r2 ?? null,
+      exhaust,
+      Math.round(r.transferred),
+    ]);
+    row.eachCell((cell, colNumber) => {
+      if (colNumber === 1) { cell.numFmt = '@'; cell.value = String(cell.value); }
+      else if (PCT_COLS.includes(colNumber) && isPct) cell.numFmt = '0.0%';
+      else if (colNumber === 6) cell.numFmt = '0.0%';
+      else if (colNumber === 7) cell.numFmt = '0.00';
+      else if (QTY_COLS.includes(colNumber)) cell.numFmt = '#,##0';
+      if (f.exhaustDate === 'done') {
+        cell.fill = RED_FILL;
+        cell.font = { ...(cell.font || {}), color: RED_FONT_COLOR };
+      }
+    });
+  }
+
+  const lastRow = rows.length + 1;
+  [6, 20, 16, 16, 12, 26, 14, 18, 12].forEach((width, index) => { ws.getColumn(index + 1).width = width; });
+  ws.autoFilter = { from: { row: 1, column: 1 }, to: { row: lastRow, column: headers.length } };
+  ws.views = [{ state: 'frozen', ySplit: 1 }];
+
+  const buffer = await wb.xlsx.writeBuffer();
+  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = compareExportFilename();
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function renderDonut(container, slices) {
+  const total = slices.reduce((sum, slice) => sum + slice.value, 0);
+  if (!(total > 0)) {
+    container.innerHTML = `<div class="history-chart-empty">${escapeHtml(t('noHistoryData'))}</div>`;
+    return;
+  }
+  const radius = 70;
+  const circumference = 2 * Math.PI * radius;
+  let offset = 0;
+  const arcs = slices.filter(slice => slice.value > 0).map(slice => {
+    const length = slice.value / total * circumference;
+    const arc = `<circle cx="100" cy="100" r="${radius}" fill="none" stroke="${slice.color}" stroke-width="28" stroke-dasharray="${Math.max(0, length - 2).toFixed(2)} ${circumference.toFixed(2)}" stroke-dashoffset="${(-offset).toFixed(2)}" transform="rotate(-90 100 100)"><title>${escapeHtml(slice.name)} · ${(slice.value / total * 100).toFixed(1)}%</title></circle>`;
+    offset += length;
+    return arc;
+  }).join('');
+  container.innerHTML = `<div class="cmp-donut">
+    <svg viewBox="0 0 200 200" role="img" aria-label="${escapeHtml(t('consumedShare'))}">${arcs}
+      <text x="100" y="98" text-anchor="middle" fill="var(--text)" font-size="15" font-family="var(--mono)">${escapeHtml(tonnes(total))}</text>
+      <text x="100" y="116" text-anchor="middle" fill="var(--text-faint)" font-size="10" font-family="var(--mono)">${escapeHtml(t('totalConsumed'))}</text>
+    </svg>
+    <ul class="cmp-donut-legend">${slices.map(slice => `<li><span class="cmp-swatch" style="background:${slice.color}"></span>${escapeHtml(slice.name)}<b>${(slice.value / total * 100).toFixed(1)}%</b></li>`).join('')}</ul>
+  </div>`;
+}
+
+document.getElementById('cmp-chips').addEventListener('click', event => {
+  const chip = event.target.closest('[data-cat]');
+  if (chip && !chip.disabled) toggleCompareCategory(chip.dataset.cat);
+});
+document.querySelectorAll('[data-cmp-metric]').forEach(button => {
+  button.addEventListener('click', () => { compareMetric = button.dataset.cmpMetric; renderCompare(); });
+});
+window.onhashchange = applyRoute;
+
+/* ---------- Quarter / freshness ---------- */
+function renderQuarterAndFreshness() {
+  document.getElementById('quarter-label').textContent = DATA.quarter_label || '-';
+  if (DATA.start_date_used) {
+    const end = new Date(quarterEndISO(DATA.start_date_used) + 'T00:00:00');
+    document.getElementById('quarter-range').textContent =
+      `(${formatIsoDate(DATA.start_date_used)} ~ ${formatLocalDate(end)})`;
+  }
+
+  const lastUpdatedEl = document.getElementById('last-updated');
+  const warnEl = document.getElementById('freshness-warning');
+  if (DATA.last_updated) {
+    const updatedDate = new Date(DATA.last_updated);
+    lastUpdatedEl.textContent = formatBerlinDateTime(DATA.last_updated);
+    const hoursAgo = (Date.now() - updatedDate.getTime()) / (1000 * 60 * 60);
+    if (hoursAgo >= 24) {
+      const daysAgo = Math.floor(hoursAgo / 24);
+      warnEl.style.display = 'inline-flex';
+      warnEl.className = 'freshness-warn';
+      warnEl.textContent = t('staleData', { days: daysAgo });
+    } else {
+      warnEl.style.display = 'none';
+    }
+  } else {
+    lastUpdatedEl.textContent = '-';
+    warnEl.style.display = 'none';
+  }
+
+  // EU TARIC site's own data-refresh date (informational — separate from
+  // when the cloud collection job last ran). '-' if the scraper couldn't
+  // find it on the page that run.
+  const euUpdatedEl = document.getElementById('eu-site-updated');
+  if (DATA.site_last_update) {
+    euUpdatedEl.textContent = formatIsoDate(DATA.site_last_update);
+  } else {
+    euUpdatedEl.textContent = '-';
+  }
+}
+
+/* ---------- Category gauges ---------- */
+function categorySummaries() {
+  const map = {};
+  for (const r of DATA.records) {
+    if (!map[r.category]) {
+      map[r.category] = { category: r.category, item_name: r.item_name, total_qty: 0, total_remaining: 0, exhausted: 0, count: 0 };
+    }
+    const m = map[r.category];
+    m.total_qty += (r.amount_kg ?? r.quarterly_kg ?? 0);
+    m.total_remaining += (r.actual_remaining_kg || 0);
+    m.count += 1;
+    if (r.is_exhausted) m.exhausted += 1;
+  }
+  return Object.values(map).sort((a,b) => a.category.localeCompare(b.category, undefined, {numeric:true}));
+}
+
+function renderGauges() {
+  const strip = document.getElementById('gauge-strip');
+  strip.innerHTML = '';
+  const cats = categorySummaries();
+  for (const c of cats) {
+    const consumedPct = c.total_qty > 0 ? (1 - c.total_remaining / c.total_qty) * 100 : 0;
+    const fillClass = consumedPct >= 90 ? 'hot' : (consumedPct >= 60 ? 'warm' : '');
+    const card = document.createElement('div');
+    card.className = 'gauge-card' + (activeCategory === c.category ? ' active' : '');
+    card.onclick = () => {
+      activeCategory = (activeCategory === c.category ? null : c.category);
+      // 카테고리 변경 시 quick-filter 초기화 (이전 카테고리 기준 필터가 새 카테고리에선 무의미)
+      if (activeCategory !== null) activeQuickFilter = null;
+      render();
+    };
+    card.innerHTML = `
+      <div class="gauge-code">CAT ${c.category}</div>
+      <div class="gauge-name">${displayItemName(c.item_name)}</div>
+      <div class="gauge-track"><div class="gauge-fill ${fillClass}" style="width:${Math.min(100, Math.max(0, consumedPct))}%"></div></div>
+      <div class="gauge-meta">
+        <span>${t('consumed', { value: consumedPct.toFixed(0) })}</span>
+        <span class="${c.exhausted > 0 ? 'exhausted-count' : ''}">${t('exhaustedCount', { exhausted: c.exhausted, count: c.count })}</span>
+      </div>
+    `;
+    strip.appendChild(card);
+  }
+}
+
+/* ---------- FTA tooltip ---------- */
+const ftaTooltipEl = document.getElementById('fta-tooltip');
+
+function showFtaTooltip(evt, orderNumber) {
+  const info = DATA.fta_origins && DATA.fta_origins[orderNumber];
+  if (!info) return;
+
+  const listItems = info.origins.map(o => `<li>${o}</li>`).join('');
+  ftaTooltipEl.innerHTML = `
+    <div class="tt-type">${info.quota_type}</div>
+    <div class="tt-order">Order No. ${orderNumber}</div>
+    <div class="tt-count">${t('availableCountries', { count: info.origins.length })}</div>
+    <ul>${listItems}</ul>
+  `;
+  ftaTooltipEl.classList.add('visible');
+  positionTooltip(evt);
+}
+
+function positionTooltip(evt) {
+  const el = ftaTooltipEl;
+  const margin = 12;
+  let x = evt.clientX + margin;
+  let y = evt.clientY + margin;
+
+  // Render offscreen first to measure
+  el.style.left = '-9999px';
+  el.style.top = '-9999px';
+  const rect = el.getBoundingClientRect();
+
+  if (x + rect.width > window.innerWidth - margin) {
+    x = evt.clientX - rect.width - margin;
+  }
+  if (y + rect.height > window.innerHeight - margin) {
+    y = evt.clientY - rect.height - margin;
+  }
+  el.style.left = Math.max(margin, x) + 'px';
+  el.style.top = Math.max(margin, y) + 'px';
+}
+
+function hideFtaTooltip() {
+  ftaTooltipEl.classList.remove('visible');
+}
+
+/* ---------- Filtering ---------- */
+// Strips diacritics (Türkiye -> Turkiye) so searching without accents still
+// matches. Also used on the query itself so accented and unaccented input
+// both work regardless of which one the user types.
+function normalizeSearchText(s) {
+  return (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
+function searchQueries(term) {
+  const normalized = normalizeSearchText(term).trim();
+  const aliases = Object.entries(SEARCH_ALIASES)
+    .find(([key]) => normalizeSearchText(key) === normalized)?.[1] || [];
+  return [normalized, ...aliases.map(normalizeSearchText)].filter(Boolean);
+}
+
+function recordSearchText(record) {
+  const ftaCountries = DATA.fta_origins?.[record.order_number]?.origins || [];
+  return normalizeSearchText([
+    record.order_number, displayOrigin(record.origin), record.item_name, displayItemName(record.item_name), record.category,
+    ...ftaCountries,
+  ].join(' '));
+}
+
+function summaryOrders(filterName) {
+  if (!DAILY_SUMMARY) return [];
+  return ({
+    'rate-jump': DAILY_SUMMARY.rateJump,
+    'pending-jump': DAILY_SUMMARY.pendingJump,
+    'low-remaining': DAILY_SUMMARY.lowRemaining,
+  })[filterName] || [];
+}
+
+function filteredRecords() {
+  let recs = DATA.records;
+  if (activeCategory) recs = recs.filter(r => r.category === activeCategory);
+  if (searchTerm) {
+    const queries = searchQueries(searchTerm);
+    recs = recs.filter(r => queries.some(query => recordSearchText(r).includes(query)));
+  }
+  if (activeQuickFilter) {
+    const orders = new Set(summaryOrders(activeQuickFilter));
+    recs = recs.filter(record => orders.has(String(record.order_number)));
+  }
+  if (sortKey) {
+    recs = [...recs].sort((a, b) => {
+      const aValue = a[sortKey];
+      const bValue = b[sortKey];
+      const aMissing = aValue === null || aValue === undefined || aValue === '';
+      const bMissing = bValue === null || bValue === undefined || bValue === '';
+
+      // Records without an exhaustion date/value stay at the bottom in
+      // either direction, while equal missing values retain source order.
+      if (aMissing && bMissing) return 0;
+      if (aMissing) return 1;
+      if (bMissing) return -1;
+
+      if (sortKey === 'exhaustion_date') {
+        return String(aValue).localeCompare(String(bValue)) * sortDirection;
+      }
+      return (Number(aValue) - Number(bValue)) * sortDirection;
+    });
+  }
+  return recs;
+}
+
+/* ---------- Main render ---------- */
+function render() {
+  renderQuarterAndFreshness();
+  renderCollectionHealth();
+  renderDailySummary();
+  renderGauges();
+  renderActiveFilterBar();
+  updateHistoryModeBadge();
+  updateSortIndicators();
+  const recs = filteredRecords();
+  const tbody = document.getElementById('table-body');
+  tbody.innerHTML = '';
+
+  if (!recs.length) {
+    const visibleColCount = document.querySelectorAll('#quota-table thead th:not(.kg-col), #quota-table thead th.kg-col' + (showKg ? '' : '.NONE')).length;
+    const colCount = showKg ? 17 : 12;
+    tbody.innerHTML = `<tr><td colspan="${colCount}" class="empty-state">${escapeHtml(t('noMatchingData'))}</td></tr>`;
+  } else {
+    for (const r of recs) {
+      const tr = document.createElement('tr');
+      // Full-row red styling is reserved strictly for 100% consumed quotas,
+      // not merely "has an exhaustion date on file". Use is_exhausted
+      // straight from the Python calculation (scraper.py) as the single
+      // source of truth, rather than re-deriving it here from
+      // consumption_rate — keeps the on-screen row, the exh-tag, and the
+      // Excel export all agreeing with each other and with the scraper.
+      const fullyExhausted = !!r.is_exhausted;
+      if (fullyExhausted) tr.classList.add('exhausted');
+
+      // Origins column always shows the curated business classification
+      // (a specific country name, "FTA Quota – CSQ", "Other countries", etc.)
+      // exactly as maintained in reference_categories.json — never a raw
+      // concatenation of scraped country names, never an "N countries" stand-in.
+      const ftaInfo = DATA.fta_origins && DATA.fta_origins[r.order_number];
+      const ftaBadge = ftaInfo ? `<span class="fta-badge">FTA-CSQ</span>` : '';
+      const originLabel = escapeHtml(displayOrigin(r.origin));
+      const originsCellContent = ftaInfo
+        ? `<span class="origins-cell has-fta" data-order="${r.order_number}">${originLabel} <span class="origins-info-icon">ⓘ</span></span>`
+        : originLabel;
+
+      // Gauge fill color mirrors the category-card thresholds above (same
+      // --alert / --warn colors): red once fully exhausted, yellow once
+      // consumption crosses 50%, otherwise the neutral steel blue.
+      const consumptionPct = (r.consumption_rate || 0) * 100;
+      const fillColor = fullyExhausted ? 'var(--alert)' : (consumptionPct >= 50 ? 'var(--warn)' : 'var(--steel)');
+      // pre-exhausted: is_exhausted=false 이지만 실제잔여가 0 이하인 상태
+      // (대기할당이 잔여를 초과 → 실제잔여 음수). 행 전체는 빨간색 아님,
+      // 해당 숫자 셀만 주황색(--warn)으로 표시.
+      const preExhausted = !fullyExhausted && (
+        Number(r.actual_remaining_kg) <= 0 ||
+        Number(r.remaining_rate) <= 0
+      );
+      const overPending = !fullyExhausted && Number(r.pending_kg) > Number(r.remaining_kg);
+      const overPendingBadge = overPending
+        ? `<span class="over-pending-badge" title="${escapeHtml(t('overPendingTitle'))}">${escapeHtml(t('overPending'))}</span>`
+        : '';
+      const warnNumClass = preExhausted ? ' pre-exhausted-num' : '';
+      tr.innerHTML = `
+        <td><span class="category-pill">${r.category}</span></td>
+        <td>${escapeHtml(displayItemName(r.item_name))}</td>
+        <td><button type="button" class="order-history-link" data-order="${r.order_number || ''}" aria-label="${escapeHtml(t('viewOrderHistory', { order: r.order_number || '' }))}">${r.order_number || '-'}</button>${ftaBadge}</td>
+        <td>${originsCellContent}</td>
+        <td class="col-qty kg-col">${fmt(r.quarterly_kg)}</td>
+        <td class="col-qty">${fmtT(r.quarterly_t)}</td>
+        <td class="col-qty kg-col">${fmt(r.transferred_kg)}</td>
+        <td class="col-qty">${fmtT(r.transferred_t)}</td>
+        <td class="col-qty kg-col">${fmt(r.pending_kg)}</td>
+        <td class="col-qty">${fmtT(r.pending_t)}</td>
+        <td class="col-qty kg-col">${fmt(r.remaining_kg)}</td>
+        <td class="col-qty">${fmtT(r.remaining_t)}</td>
+        <td class="col-qty kg-col${warnNumClass}">${fmt(r.actual_remaining_kg)}${overPendingBadge}</td>
+        <td class="col-qty${warnNumClass}">${fmtT(r.actual_remaining_t)}</td>
+        <td class="${warnNumClass.trim()}">${fmtPct(r.remaining_rate)}</td>
+        <td><div class="rate-cell"><span class="rate-bar"><span class="rate-fill" style="width:${Math.min(100, Math.max(0, (r.consumption_rate||0)*100))}%;background:${fillColor}"></span></span>${fmtConsumptionRate(r.consumption_rate)}</div></td>
+        <td>${r.exhaustion_date || '-'}${fullyExhausted ? '<span class="exh-tag">EXHAUSTED</span>' : ''}</td>
+      `;
+      tbody.appendChild(tr);
+
+      const historyLink = tr.querySelector('.order-history-link');
+      if (historyLink) historyLink.addEventListener('click', () => openOrderHistory(r.order_number));
+
+      if (ftaInfo) {
+        const cell = tr.querySelector('.origins-cell.has-fta');
+        cell.addEventListener('mouseenter', (evt) => showFtaTooltip(evt, r.order_number));
+        cell.addEventListener('mousemove', (evt) => positionTooltip(evt));
+        cell.addEventListener('mouseleave', hideFtaTooltip);
+      }
+    }
+  }
+
+  const total = DATA.records.length;
+  const exhaustedTotal = DATA.records.filter(r => r.is_exhausted).length;
+  document.getElementById('status-line').innerHTML =
+    t('displayed', { shown: recs.length, total, exhausted: exhaustedTotal });
+
+  document.getElementById('footer-note').textContent =
+    t('footer', { date: formatBerlinDateTime(DATA.last_updated) });
+}
+
+function renderActiveFilterBar() {
+  const bar = document.getElementById('active-filter-bar');
+  const tagsEl = document.getElementById('active-filter-tags');
+  const tags = [];
+  if (activeCategory) tags.push(`${t('category')} <b>CAT ${activeCategory}</b>`);
+  if (searchTerm) tags.push(`${t('search')} <b>"${escapeHtml(searchTerm)}"</b>`);
+  const filterLabels = {
+    'rate-jump': t('rateJump'),
+    'pending-jump': t('pendingJump'),
+    'low-remaining': t('quickLowRemaining'),
+  };
+  if (activeQuickFilter && filterLabels[activeQuickFilter]) {
+    tags.push(`<b>${filterLabels[activeQuickFilter]}</b>`);
+  }
+  if (tags.length) {
+    bar.style.display = 'flex';
+    tagsEl.innerHTML = tags.join(' &nbsp;+&nbsp; ');
+  } else {
+    bar.style.display = 'none';
+  }
+}
+
+function clearFilters() {
+  activeCategory = null;
+  searchTerm = '';
+  activeQuickFilter = null;
+  document.getElementById('search').value = '';
+  render();
+}
+
+function toggleQuickFilter(filterName) {
+  activeQuickFilter = activeQuickFilter === filterName ? null : filterName;
+  render();
+}
+
+function toggleKg() {
+  showKg = !showKg;
+  document.body.classList.toggle('show-kg', showKg);
+  const button = document.getElementById('kg-toggle');
+  button.classList.toggle('active-btn', showKg);
+  button.textContent = showKg ? t('hideKg') : t('showKg');
+}
+
+function toggleKgColumns() { toggleKg(); }
+
+document.getElementById('search').addEventListener('input', (e) => {
+  searchTerm = e.target.value.trim();
+  render();
+});
+
+document.querySelectorAll('[data-summary-filter]').forEach(button => {
+  button.addEventListener('click', () => toggleQuickFilter(button.dataset.summaryFilter));
+});
+
+/* ---------- Excel export (client-side, fully offline via local lib/exceljs.min.js) ----------
+   NOTE: this used to run on SheetJS's free "xlsx" build, which silently
+   drops cell fill/font styling on write (confirmed by round-tripping a
+   styled cell through it and reading it back with openpyxl — the fill
+   came back empty). That's why exhausted rows never showed up red in the
+   downloaded file even though the on-screen table did. ExcelJS's
+   community build genuinely writes fill/font styles (also confirmed via
+   openpyxl round-trip), so this export now mirrors run_daily.bat's
+   openpyxl output: bold header, autofilter, freeze panes, a red
+   fill+font on fully-exhausted rows, and a data bar on 소진율. */
+function exportHeaders() {
+  return [
+    'P/N', 'Item', 'Order number', 'Origins',
+    `${t('quarterlyQuota')} (kg)`, `${t('quarterlyQuota')} (t)`,
+    `${t('transferredQuota')} (kg)`, `${t('transferredQuota')} (t)`,
+    `${t('awaitingAllocation')} (kg)`, `${t('awaitingAllocation')} (t)`,
+    `${t('remainingQuota')} (kg)`, `${t('remainingQuota')} (t)`,
+    `${t('actualRemainingQuota')} (kg)`, `${t('actualRemainingQuota')} (t)`,
+    t('remainingRate'), t('consumptionRate'), t('exhaustionDate'),
+  ];
+}
+const EXPORT_QTY_COLS = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14];   // 분기/이월/대기할당/잔여/실제잔여 kg+t
+const EXPORT_PCT_COLS = [15, 16];                               // 잔여율, 소진율
+const EXPORT_ORDER_NUMBER_COL = 3;
+const EXPORT_COL_WIDTHS = [6, 10, 10, 20, 13, 11, 13, 11, 13, 11, 13, 11, 14, 12, 8, 8, 12];
+
+function recordToExportRow(r) {
+  return [
+    r.category, displayItemName(r.item_name), r.order_number, displayOrigin(r.origin),
+    r.quarterly_kg != null ? Math.round(r.quarterly_kg) : null,
+    r.quarterly_t != null ? Math.round(r.quarterly_t) : null,
+    r.transferred_kg != null ? Math.round(r.transferred_kg) : null,
+    r.transferred_t != null ? Math.round(r.transferred_t) : null,
+    r.pending_kg != null ? Math.round(r.pending_kg) : null,
+    r.pending_t != null ? Math.round(r.pending_t) : null,
+    r.remaining_kg != null ? Math.round(r.remaining_kg) : null,
+    r.remaining_t != null ? Math.round(r.remaining_t) : null,
+    r.actual_remaining_kg != null ? Math.round(r.actual_remaining_kg) : null,
+    r.actual_remaining_t != null ? Math.round(r.actual_remaining_t) : null,
+    r.remaining_rate,
+    r.consumption_rate,
+    r.exhaustion_date || null,
+  ];
+}
+
+function sanitizeFilenamePart(value) {
+  return String(value || '')
+    .trim()
+    .replace(/[\\/:*?"<>|]/g, '_')
+    .replace(/\s+/g, '_')
+    .replace(/_+/g, '_')
+    .replace(/^[_. ]+|[_. ]+$/g, '')
+    .slice(0, 80);
+}
+
+function exportFilenameSearchLabel(term) {
+  // 한글 검색어는 첫 번째 영어 alias로 대체 (파일명 깨짐 방지)
+  if (!term) return '';
+  const normalized = (term || '').trim();
+  const aliasEntry = Object.entries(SEARCH_ALIASES)
+    .find(([key]) => key === normalized || normalized === key);
+  if (aliasEntry) return aliasEntry[1][0] || normalized;
+  // ASCII만 있으면 그대로 사용
+  return /^[\x00-\x7F]+$/.test(normalized) ? normalized : normalized;
+}
+
+function exportFilename(scope) {
+  const parts = [];
+  if (scope !== 'all') {
+    if (activeCategory) {
+      const categoryRecord = DATA.records.find(record => record.category === activeCategory);
+      parts.push(displayItemName(categoryRecord?.item_name) || `CAT_${activeCategory}`);
+    }
+    if (searchTerm) parts.push(exportFilenameSearchLabel(searchTerm));
+  }
+
+  const filterLabel = parts.map(sanitizeFilenamePart).filter(Boolean).join('_') || 'All';
+  return `EU_Steel_Quota_${filterLabel}.xlsx`;
+}
+
+async function exportToExcel(scope) {
+  // scope: 'visible' = whatever the dashboard currently shows (filtered/searched),
+  //        'all' = every record regardless of current filter/search.
+  const records = scope === 'all' ? DATA.records : filteredRecords();
+
+  const wb = new ExcelJS.Workbook();
+  const ws = wb.addWorksheet('QUOTA');
+  const headers = exportHeaders();
+
+  const headerRow = ws.addRow(headers);
+  headerRow.eachCell((cell) => {
+    cell.font = { bold: true };
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE8EAED' } };
+    cell.alignment = { horizontal: 'center' };
+  });
+
+  const RED_FILL = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFC7CE' } };
+  const RED_FONT_COLOR = { argb: 'FF9C0006' };
+
+  for (const r of records) {
+    const row = ws.addRow(recordToExportRow(r));
+    row.eachCell((cell, colNumber) => {
+      if (colNumber === EXPORT_ORDER_NUMBER_COL) {
+        // Keep order number as text so leading zeros ("099500") survive.
+        cell.numFmt = '@';
+        cell.value = String(cell.value);
+      } else if (EXPORT_QTY_COLS.includes(colNumber)) {
+        cell.numFmt = '#,##0';
+      } else if (EXPORT_PCT_COLS.includes(colNumber)) {
+        cell.numFmt = '0.0%';
+      }
+      if (r.is_exhausted) {
+        cell.fill = RED_FILL;
+        cell.font = { ...(cell.font || {}), color: RED_FONT_COLOR };
+      }
+    });
+  }
+
+  const lastRow = records.length + 1;
+  EXPORT_COL_WIDTHS.forEach((width, index) => { ws.getColumn(index + 1).width = width || 14; });
+  ws.autoFilter = { from: { row: 1, column: 1 }, to: { row: lastRow, column: headers.length } };
+  ws.views = [{ state: 'frozen', ySplit: 1 }];
+
+  // Data bar on 소진율 (column P = 16), matching the on-screen gauge and
+  // run_daily.bat's openpyxl output.
+  if (records.length > 0) {
+    ws.addConditionalFormatting({
+      ref: `P2:P${lastRow}`,
+      rules: [{
+        type: 'dataBar',
+        minLength: 0, maxLength: 100,
+        showValue: true,
+        cfvo: [{ type: 'num', value: 0 }, { type: 'num', value: 1 }],
+        color: { argb: 'FFE2523F' },
+      }],
+    });
+  }
+
+  const buffer = await wb.xlsx.writeBuffer();
+  const filename = exportFilename(scope);
+
+  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  closeExportMenu();
+}
+
+function toggleExportMenu() {
+  document.getElementById('export-menu').classList.toggle('open');
+}
+function closeExportMenu() {
+  document.getElementById('export-menu').classList.remove('open');
+}
+document.addEventListener('click', (e) => {
+  const dropdown = document.querySelector('.export-dropdown');
+  if (dropdown && !dropdown.contains(e.target)) closeExportMenu();
+});
+
+document.querySelectorAll('[data-history-metric]').forEach(button => {
+  button.addEventListener('click', () => {
+    activeHistoryMetric = button.dataset.historyMetric;
+    if (activeHistoryOrder) renderOrderHistory();
+  });
+});
+
+const orderHistoryDialog = document.getElementById('order-history-dialog');
+orderHistoryDialog.addEventListener('click', event => {
+  const rect = orderHistoryDialog.getBoundingClientRect();
+  const outside = event.clientX < rect.left || event.clientX > rect.right ||
+    event.clientY < rect.top || event.clientY > rect.bottom;
+  if (outside) closeOrderHistory();
+});
+
+function loadSnapshotQueries() {
+  const db = firebase.firestore();
+  return Promise.all([
+    db.collection("quota_snapshots").orderBy("snapshot_date", "desc").limit(2).get(),
+    db.collection("quota_category_summary").orderBy("date", "desc").get(),
+  ]);
+}
+
+async function loadCloudData() {
+  const statusLine = document.getElementById("status-line");
+  if (statusLine) statusLine.textContent = t('loadingFirestore');
+
+  try {
+    // Status view only ever needs the latest snapshot plus the previous one
+    // (for the daily-change cards) — a couple hundred KB regardless of how
+    // many years of history have piled up. The date list alongside it is a
+    // lightweight category-summary index; everything else (an older date, an order's
+    // full history, the Compare view) is fetched lazily, only when opened.
+    const [latestQuery, dateListQuery] = await loadSnapshotQueries();
+
+    SNAPSHOTS = {};
+    latestQuery.forEach(doc => { SNAPSHOTS[doc.id] = doc.data(); });
+    HISTORY_DATES = dateListQuery.docs.map(doc => ({ date: doc.id, quarter_label: doc.data().quarter_label || '' }));
+
+    if (!HISTORY_DATES.length) {
+      throw new Error(t('noFirestoreData'));
+    }
+
+    latestSnapshotDate = HISTORY_DATES[0].date;
+    DATA = SNAPSHOTS[latestSnapshotDate];
+    initHistorySelector();
+    render();
+    applyRoute();
+    // 로딩 완료: overlay 페이드아웃
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay) {
+      overlay.classList.add('hidden');
+      setTimeout(() => overlay.remove(), 350);
+    }
+  } catch (error) {
+    console.error("Firestore load failed:", error);
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay) overlay.remove();
+    if (statusLine) {
+      statusLine.textContent = t('loadFailed');
+    }
+  }
+}
+
+loadCloudData();
+</script>
+
+</body>
+</html>

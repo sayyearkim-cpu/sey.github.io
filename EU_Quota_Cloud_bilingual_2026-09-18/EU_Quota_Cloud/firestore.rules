@@ -1,0 +1,24 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /quota_snapshots/{snapshotId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /quota_meta/{documentId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /quota_category_summary/{summaryId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
