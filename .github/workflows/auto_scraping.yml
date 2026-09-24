@@ -2,13 +2,17 @@ name: Auto Web Scraping & Deploy
 
 on:
   schedule:
-    # 🌟 주기 설정 (분 시 일 월 요일 - UTC 기준)
-    # 아래 설정은 한국 시간(KST)으로 매일 오전 9시에 실행됩니다. (UTC 00:00)
-    - cron: '0 0 * * *'
-  workflow_dispatch: # 언제든 수동으로 실행하고 싶을 때 쓰는 버튼 활성화
+    - cron: '0 0 * * *' # 매일 오전 9시 (KST)
+  workflow_dispatch: # 수동 실행 버튼
+
+# 🌟 GitHub Pages 배포를 위한 권한 설정 추가
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,17 +32,21 @@ jobs:
     - name: 파이썬 스크레이퍼 실행
       run: python scraper.py
 
-    - name: 변경된 JSON 파일 저장 및 깃허브에 푸시
+    - name: 변경된 JSON 파일 깃허브에 푸시
       run: |
         git config --global user.name "GitHub Actions Bot"
         git config --global user.email "actions@github.com"
-        # data.json 파일이 변경되었다면 스테이징 (경로에 맞게 수정 가능)
-        git add data.json || git add public/data.json || true 
-        
-        # 변경사항이 있을 때만 커밋 및 푸시 진행
+        git add .
         if ! git diff --cached --quiet; then
           git commit -m "🤖 자동 데이터 업데이트: $(date +'%Y-%m-%d %H:%M:%S')"
           git push
         else
           echo "변경사항이 없습니다."
         fi
+
+    # 🌟 [핵심] 코드를 안 고치고 public 폴더만 골라서 바로 웹에 배포하는 단계
+    - name: GitHub Pages에 public 폴더 배포하기
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./public # 👈 여기에 내 HTML이 있는 폴더명을 정확히 적어줍니다.
