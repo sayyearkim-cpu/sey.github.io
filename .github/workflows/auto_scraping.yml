@@ -5,7 +5,7 @@ on:
     - cron: '0 0 * * *' # 매일 오전 9시 (KST)
   workflow_dispatch: # 수동 실행 버튼
 
-# 🌟 GitHub Pages 배포를 위한 권한 설정 추가
+# GitHub Actions 배포와 저장소 쓰기를 위한 권한 설정
 permissions:
   contents: write
   pages: write
@@ -32,7 +32,7 @@ jobs:
     - name: 파이썬 스크레이퍼 실행
       run: python scraper.py
 
-    - name: 변경된 JSON 파일 깃허브에 푸시
+    - name: 변경된 JSON 파일 저장소에 반영 (Push)
       run: |
         git config --global user.name "GitHub Actions Bot"
         git config --global user.email "actions@github.com"
@@ -44,9 +44,12 @@ jobs:
           echo "변경사항이 없습니다."
         fi
 
-    # 🌟 [핵심] 코드를 안 고치고 public 폴더만 골라서 바로 웹에 배포하는 단계
-    - name: GitHub Pages에 public 폴더 배포하기
-      uses: peaceiris/actions-gh-pages@v4
+    # 🌟 [핵심] public 폴더만 쏙 골라서 깃허브 배포 서버로 업로드
+    - name: public 폴더를 웹 배포 파일로 패키징
+      uses: actions/upload-pages-artifact@v3
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./public # 👈 여기에 내 HTML이 있는 폴더명을 정확히 적어줍니다.
+        path: './public' # 👈 HTML과 JSON 파일이 들어있는 폴더 경로
+
+    # 🌟 깃허브 서버에 최종 배포 명령 내리기
+    - name: GitHub Pages 웹사이트 배포 실행
+      uses: actions/deploy-pages@v4
